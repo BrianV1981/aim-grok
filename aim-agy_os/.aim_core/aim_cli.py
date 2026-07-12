@@ -459,7 +459,11 @@ def cmd_sync_issues(args):
 
 def cmd_reincarnate(args):
     """Triggers the automated reincarnate handoff loop."""
-    run_script(os.path.join(AIM_CORE_DIR, "aim_reincarnate.py"), [])
+    rein_args = []
+    sid = getattr(args, "session_id", None)
+    if sid:
+        rein_args += ["--session-id", sid]
+    run_script(os.path.join(AIM_CORE_DIR, "aim_reincarnate.py"), rein_args)
 
 def cmd_delegate(args):
     """Dispatches to aim_delegate.py to spawn parallel sub-agents."""
@@ -860,7 +864,16 @@ def main():
     subparsers.add_parser("sync")
     subparsers.add_parser("sync-issues", help="Synchronize remote GitHub issues to local ledger")
 
-    subparsers.add_parser("reincarnate", help="Trigger the Reincarnation Protocol (Automated context handoff and terminal swap)")
+    rein_parser = subparsers.add_parser(
+        "reincarnate",
+        help="Trigger the Reincarnation Protocol (Automated context handoff and terminal swap)",
+    )
+    rein_parser.add_argument(
+        "--session-id",
+        type=str,
+        default=None,
+        help="Explicit Grok/AGY conversation UUID for pulse extraction",
+    )
     
     delegate_parser = subparsers.add_parser("delegate", help="Spawn parallel sub-agents to analyze multiple files (The RLM Pattern)")
     delegate_parser.add_argument("instruction", help="The prompt to give each sub-agent")
