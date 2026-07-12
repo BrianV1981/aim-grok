@@ -148,10 +148,20 @@ def process_transcript(md_path):
         wiki_mode = os.environ.get("AIM_WIKI_MODE", "deterministic").lower()
 
         if wiki_mode in ("agent", "agy", "grok", "llm"):
-            # Legacy two-node agent path (optional)
-            scribe_session_name = "scribe_agent_aim"
-            print(f"[WATCHDOG] Agent mode: spawning Scribe ({wiki_mode})...")
-            # Fall through to deterministic if spawn fails is safer — still run deterministic below
+            # Legacy two-node agent path (optional). Name must be vessel+role+project+ts
+            # so multi-vessel hosts never share a global `scribe_agent_aim` singleton.
+            try:
+                from agent_session_names import scribe_session_name as _scribe_name
+
+                planned_scribe = _scribe_name(project_root=AIM_ROOT)
+            except Exception:
+                planned_scribe = f"grok_scribe_fallback_{int(time.time())}"
+            print(
+                f"[WATCHDOG] Agent mode: planned Scribe session `{planned_scribe}` "
+                f"({wiki_mode}); deterministic compile remains primary."
+            )
+            # Spawn path intentionally not re-enabled here — deterministic is primary.
+            # When re-enabled, use planned_scribe only (never scribe_agent_aim).
         else:
             print("[WATCHDOG] Deterministic mode: extractive summarize → _ingest → wiki pages")
 

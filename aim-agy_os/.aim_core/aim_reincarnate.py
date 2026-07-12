@@ -21,6 +21,7 @@ from reincarnation.gameplan_manager import load_and_validate_gameplan, cleanup_g
 from reincarnation.background_tasks import trigger_background_pipelines
 from reincarnation.context_builder import fetch_issue_context, build_wakeup_prompt
 from reincarnation.teleport_engine import get_current_tmux_session, spawn_new_agent, execute_teleport
+from agent_session_names import reincarnation_session_name
 
 def main():
     parser = argparse.ArgumentParser(description="A.I.M. Reincarnation Protocol")
@@ -45,8 +46,8 @@ def main():
     issues = fetch_issue_context(AIM_ROOT)
     prompt = build_wakeup_prompt(gameplan, issues)
     
-    # 3. Spawn & Teleport
-    session_name = f"aim_reincarnation_{int(time.time())}"
+    # 3. Spawn & Teleport — vessel+role+project+timestamp (never bare aim_reincarnation_*)
+    session_name = reincarnation_session_name(project_root=workspace)
     spawn_new_agent(workspace, session_name, prompt)
     cleanup_gameplan(AIM_ROOT)
     execute_teleport(current_tmux, session_name)

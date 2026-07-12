@@ -128,7 +128,13 @@ def process_wiki_agent():
         print("No files found in memory-wiki/_ingest/ to process.")
         return
 
-    session_name = f"wiki_agent_{os.path.basename(base_dir)}"
+    try:
+        from agent_session_names import wiki_session_name
+
+        session_name = wiki_session_name(project_root=base_dir)
+    except Exception:
+        # Last-resort unique name (still not a global singleton)
+        session_name = f"grok_wiki_fallback_{int(time.time())}"
     wiki_dir = os.path.join(base_dir, "memory-wiki")
     agent_cli = os.environ.get("AIM_WIKI_AGENT", "agy")
     if agent_cli == "grok":
@@ -136,6 +142,7 @@ def process_wiki_agent():
     else:
         launch = "agy --dangerously-skip-permissions"
 
+    # Only skip if THIS exact namespaced session is already live (not any wiki agent).
     check_cmd = subprocess.run(
         ["tmux", "has-session", "-t", session_name], capture_output=True
     )

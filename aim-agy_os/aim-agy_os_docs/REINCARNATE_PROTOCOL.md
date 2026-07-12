@@ -25,13 +25,13 @@ The system cannot feed the entire raw history directly into the permanent memory
 
 ### Phase 4: Persistent Memory Weaving (`wiki_tools.py`)
 The tiny summary files sitting in `_ingest/` must be integrated into the permanent knowledge base.
-- **The Wiki Agent:** The Subconscious Scribe daemon spawns a dedicated, ephemeral `wiki_agent` in a background `tmux` session.
+- **The Wiki Agent:** Optional agent mode spawns a dedicated ephemeral wiki maintainer in tmux, named `{vessel}_wiki_{project_slug}_{timestamp}` (never a global singleton).
 - **The Task:** It wakes up, reads the bullet points in `_ingest/`, and intelligently weaves those facts into the permanent Obsidian wiki files (e.g., `index.md`, `log.md`).
 - **Cleanup & Re-embedding:** Once woven, the agent deletes the chunks from `_ingest/`. Crucially, the newly updated Wiki pages are re-embedded directly into `memory_lance` so the main `aim search` command can find the new lore semantically. The `wiki_agent` then gracefully exits.
 
 ### Phase 5: The Teleport (`aim_reincarnate.py`)
 While Phases 3 and 4 handle long-term memory in the background, Phase 5 handles the immediate tactical handoff.
 - **Sync:** The script synchronizes remote GitHub issues into `continuity/ISSUE_TRACKER.md`.
-- **The Spawn:** It creates a brand-new, clean `tmux` session (`aim_reincarnation_[TIMESTAMP]`).
+- **The Spawn:** It creates a brand-new, clean `tmux` session named `{vessel}_reincarnation_{project_slug}_{timestamp}` (aim-grok default vessel `grok`; override via `AIM_VESSEL_CLI`). Scribes use `{vessel}_scribe_…`. This avoids multi-vessel collisions on a shared host tmux server.
 - **The Injection:** It pipes a strict wake-up prompt into the new agent's shell, commanding it to immediately read the `AGENTS.md` core constraints, the `REINCARNATION_GAMEPLAN.md`, and the `ISSUE_TRACKER.md`.
 - **Termination:** The script prompts the operator to press Enter, which gracefully kills the bloated, outgoing agent, leaving only the fresh agent running with perfect Epistemic Certainty.

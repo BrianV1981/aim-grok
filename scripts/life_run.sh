@@ -145,8 +145,9 @@ export AIM_REINCARNATE_NO_TELEPORT=1
 export AIM_WIKI_MODE=deterministic
 export AIM_WORKSPACE="$TEST_DIR/vessel"
 
-# Capture sessions before
-SESSIONS_BEFORE=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | grep -c aim_reincarnation || true)
+# Capture sessions before (vessel+role prefix: grok_reincarnation_*)
+REINC_PREFIX="${AIM_VESSEL_CLI:-grok}_reincarnation_"
+SESSIONS_BEFORE=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | grep -c "$REINC_PREFIX" || true)
 
 ./aim-agy_os/venv/bin/python aim-agy_os/.aim_core/aim_reincarnate.py \
   --session-id "$SESSION_ID" 2>&1 | tee /tmp/life_reinc.out
@@ -158,7 +159,7 @@ else
   cat /tmp/life_reinc.out | tail -40
 fi
 
-NEW_SESS=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | grep aim_reincarnation | tail -1 || true)
+NEW_SESS=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | grep "$REINC_PREFIX" | tail -1 || true)
 echo "new_tmux_session=${NEW_SESS:-none}"
 if [[ -n "${NEW_SESS:-}" ]]; then
   ok "tmux vessel spawned: $NEW_SESS"
