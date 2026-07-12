@@ -1,5 +1,10 @@
 # Changelog — aim-grok
 
+## [v0.2.1-sync] - 2026-07-12
+- Sync engine from aim-agy `947c538` (P2: path, heap, docs, traceback, CI, prune-remote)
+- Preserved Grok overlays (`vessel_paths`, session handoff, vessel `config_utils`)
+- CI workflow + TOOLS.md updated from upstream
+
 ## [v0.2.0-phase1] - 2026-07-11
 - `vessel_paths.py`: resolve Grok `chat_history.jsonl` (+ AGY fallback)
 - Handoff / porter / recover_json_logs use vessel paths

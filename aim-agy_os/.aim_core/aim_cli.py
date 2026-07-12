@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import traceback
 import argparse
 import subprocess
 import sys
@@ -151,6 +152,7 @@ def cmd_bug(args):
     except FileNotFoundError:
         print(f"[ERROR] GitHub CLI ('gh') is not installed. Please install it to use '{CLI_NAME} bug'.")
     except Exception as e:
+        traceback.print_exc()
         print(f"[ERROR] Failed to create issue: {e}")
 
 def cmd_bug_operator(args):
@@ -194,6 +196,7 @@ def cmd_bug_operator(args):
     except FileNotFoundError:
         print(f"[ERROR] GitHub CLI ('gh') is not installed. Please install it to use '{CLI_NAME} bug'.")
     except Exception as e:
+        traceback.print_exc()
         print(f"[ERROR] Failed to create issue: {e}")
 
 
@@ -221,13 +224,10 @@ def cmd_fix(args):
     """Spawns a Git Worktree for a specific GitHub Issue ID."""
     issue_id = args.id
     branch_name = f"fix/issue-{issue_id}"
-    # Worktrees live at the *vessel* root (BASE_DIR/PROJECT_ROOT), not under the
-    # engine payload. Using OS_DIR caused aim-agy_os/aim-agy_os/workspace/ when
-    # PROJECT_ROOT was mis-detected as the engine directory.
-    worktree_path = os.path.join(BASE_DIR, "workspace", f"issue-{issue_id}")
+    worktree_path = os.path.join(PROJECT_ROOT, "workspace", f"issue-{issue_id}")
     print(f"--- A.I.M. FACTORY FLOOR (Issue #{issue_id}) ---")
     try:
-        os.makedirs(os.path.join(BASE_DIR, "workspace"), exist_ok=True)
+        os.makedirs(os.path.join(PROJECT_ROOT, "workspace"), exist_ok=True)
         subprocess.run(["git", "worktree", "add", worktree_path, "-b", branch_name], cwd=BASE_DIR, check=True)
         
         # Copy the gitignored local CONFIG.json so the worktree can run tests natively
@@ -239,10 +239,70 @@ def cmd_fix(args):
             shutil.copy2(config_src, os.path.join(config_dest_dir, "CONFIG.json"))
             
         print(f"[SUCCESS] Worktree created at {worktree_path} on branch {branch_name}")
-        print(f"[ACTION] To start working, run: cd {worktree_path}")
+        print(f"[ACTION] To start working, run: cd workspace/issue-{issue_id}")
         print(f"[ACTION] When the bug is resolved, run: {CLI_NAME} push \"Fix: <description> (Closes #{issue_id})\"")
     except Exception as e:
+        traceback.print_exc()
         print(f"[ERROR] Failed to create worktree: {e}")
+
+def cmd_prune_remote(args):
+    """Prunes remote tracking branches like archive-fix/* and fix/issue-* that are no longer needed."""
+    print("--- A.I.M. REMOTE BRANCH PRUNE ---")
+    try:
+        result = subprocess.run(["git", "branch", "-r"], cwd=BASE_DIR, capture_output=True, text=True, check=True)
+        branches = [b.strip() for b in result.stdout.split('\n') if b.strip()]
+        
+        # Get open PR heads to protect them
+        open_prs = set()
+        pr_result = subprocess.run(["gh", "pr", "list", "--state", "open", "--json", "headRefName"], cwd=BASE_DIR, capture_output=True, text=True)
+        if pr_result.returncode == 0:
+            import json
+            try:
+                pr_data = json.loads(pr_result.stdout)
+                open_prs = {pr["headRefName"] for pr in pr_data}
+            except Exception:
+                pass
+        else:
+            print("[WARNING] Could not fetch open PRs from GitHub. Proceeding with caution.")
+            
+        to_delete = []
+        skipped = []
+        for b in branches:
+            if b.startswith("origin/archive-fix/") or b.startswith("origin/fix/issue-"):
+                branch_name = b.replace("origin/", "", 1)
+                if branch_name in open_prs:
+                    skipped.append(branch_name)
+                else:
+                    to_delete.append(branch_name)
+        
+        if skipped:
+            print(f"[INFO] Skipping {len(skipped)} branches that have open PRs:")
+            for b in skipped:
+                print(f"  - [PROTECTED] {b}")
+                
+        if not to_delete:
+            print("[INFO] No stale remote branches found to delete.")
+            return
+            
+        print(f"\n[INFO] Found {len(to_delete)} stale remote branches:")
+        for b in to_delete:
+            print(f"  - {b}")
+            
+        if not getattr(args, 'confirm', False):
+            print("\n[DRY RUN] This was a dry run. To actually delete these branches from the remote, run with --confirm")
+            return
+            
+        print("\n[ACTION] Deleting branches from origin...")
+        for branch in to_delete:
+            try:
+                subprocess.run(["git", "push", "origin", "--delete", branch], cwd=BASE_DIR, capture_output=True, text=True, check=True)
+                print(f"  [DELETED] {branch}")
+            except subprocess.CalledProcessError as e:
+                print(f"  [ERROR] Failed to delete {branch}: {e.stderr.strip()}")
+                
+        print("\n[SUCCESS] Remote cleanup complete.")
+    except Exception as e:
+        print(f"\n[ERROR] Failed to prune remote branches: {e}")
 
 def cmd_promote(args):
     """Automates the Phase Protocol: Archives main, merges current dev branch, and cleans up the worktree."""
@@ -299,6 +359,7 @@ def cmd_promote(args):
         print(f"Output: {e.stdout}")
         print(f"Error: {e.stderr}")
     except Exception as e:
+        traceback.print_exc()
         print(f"\\n[ERROR] Failed to promote: {e}")
 
 def cmd_merge_batch(args):
@@ -360,6 +421,7 @@ def cmd_push(args):
         else:
             print(f"[1/3] No semantic prefix found (Feature/Fix/BREAKING CHANGE). Version remains {new_version}.")
     except Exception as e:
+        traceback.print_exc()
         print(f"[WARNING] Semantic Release failed: {e}")
 
     # 2. SOVEREIGN SYNC (Decoupled Background Task)
@@ -372,6 +434,7 @@ def cmd_push(args):
             stderr=subprocess.DEVNULL
         )
     except Exception as e:
+        traceback.print_exc()
         print(f"[WARNING] Background Sovereign Sync spawn failed: {e}")
         
     print("[3/3] Deploying to GitHub...")
@@ -410,6 +473,7 @@ def cmd_sync(args):
         print(f"      Imported {imported} new/updated cartridges.")
         print("[SUCCESS] Workspace synchronized.")
     except Exception as e:
+        traceback.print_exc()
         print(f"[ERROR] Sync failed: {e}")
 
 def cmd_handoff(args):
@@ -474,6 +538,7 @@ def cmd_search_sessions(args):
             print(f"\nSession: {r[0][:8]} ({r[1]})")
             print(f"Match: {r[2]}")
     except Exception as e:
+        traceback.print_exc()
         print(f"Search failed: {e}")
     conn.close()
 
@@ -668,6 +733,7 @@ def cmd_update(args):
         subprocess.run(["git", "clone", "--depth", "1", "https://github.com/BrianV1981/aim-agy.git", temp_dir], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         print("    [SUCCESS] Remote payload secured.")
     except Exception as e:
+        traceback.print_exc()
         print(f"[ERROR] Failed to connect to Swarm network: {e}")
         return
 
@@ -764,6 +830,10 @@ def main():
     update_parser.add_argument("target", choices=["engine", "project"], nargs="?", default="engine", help="Which component to update")
     subparsers.add_parser("doctor", help="Run a diagnostic check on system dependencies")
     subparsers.add_parser("health")
+    
+    prune_remote_parser = subparsers.add_parser("prune-remote", help="Garbage collect stale remote branches (fix/issue-* and archive-fix/*)")
+    prune_remote_parser.add_argument("--confirm", action="store_true", help="Execute the deletions instead of dry-run")
+    
     subparsers.add_parser("purge")
     subparsers.add_parser("uninstall")
     subparsers.add_parser("index")
@@ -931,6 +1001,7 @@ def main():
     elif args.command == "promote": cmd_promote(args)
     elif args.command == "merge-batch": cmd_merge_batch(args)
     elif args.command == "purge": cmd_purge(args)
+    elif args.command == "prune-remote": cmd_prune_remote(args)
     elif args.command == "uninstall": cmd_uninstall(args)
     else: parser.print_help()
 
