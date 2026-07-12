@@ -1,14 +1,14 @@
+# SYNC_FROM_AIM_AGY
+
+*Ingested from `seed_sync-from-aim-agy.md` on 2026-07-12*
+
+# SYNC_FROM_AIM_AGY
+
+*Seeded from `/home/kingb/aim-grok/SYNC_FROM_AIM_AGY.md`*
+
 # Syncing engine code from aim-agy → aim-grok
 
 aim-agy remains the **upstream** for Antigravity + shared engine. aim-grok **vendors** `aim-agy_os/` and applies Grok overlays.
-
-**Three-vessel drift check** (agy · grok · opencode):
-
-```bash
-python3 scripts/vessel_core_diff.py --report-only
-```
-
-See `scripts/VESSEL_LOCKSTEP.md` for lockstep policy and OpenCode port rules.
 
 ## What is overlay (do not clobber blindly)
 
@@ -19,12 +19,6 @@ See `scripts/VESSEL_LOCKSTEP.md` for lockstep policy and OpenCode port rules.
 | `.grok/` skills | aim-grok |
 | `.vscode/mcp.json`, `.grok/mcp.json` | aim-grok |
 | `vessel_paths.py` | aim-grok (port back to aim-agy later if desired) |
-| `wiki_compiler.py` | aim-grok deterministic wiki |
-| Grok `teleport_engine` / pulse extract / porter / recover | aim-grok harness |
-| Root `scripts/vessel_core_diff.py` fleet tooling | aim-grok orchestrator |
-
-**Layout goal:** all vessels use nested `aim-agy_os/` (opencode migrating from flat `aim_core/`). Identical soul; harness overlays only.
-
 | Grok patches in `extract_signal.py`, `handoff_pulse_generator.py`, `session_porter.py`, `recover_json_logs.py`, `config_utils.py` tmp path | aim-grok |
 
 ## Safe rsync (engine only)
@@ -37,22 +31,16 @@ GROK=/home/kingb/aim-grok
 rsync -anc --delete \
   --exclude venv --exclude memory --exclude memory_lance \
   --exclude workspace --exclude archive --exclude continuity \
-  --exclude memory-wiki --exclude planning-artifacts \
-  --exclude '__pycache__' --exclude '*.pyc' --exclude temp \
+  --exclude '__pycache__' --exclude '*.pyc' \
   --exclude '.aim_core/vessel_paths.py' \
-  --exclude '.aim_core/wiki_compiler.py' \
-  --exclude '.aim_core/agent_session_names.py' \
   "$AGY/aim-agy_os/" "$GROK/aim-agy_os/"
 
 # Real sync (after reviewing dry-run)
 rsync -a --delete \
   --exclude venv --exclude memory --exclude memory_lance \
   --exclude workspace --exclude archive --exclude continuity \
-  --exclude memory-wiki --exclude planning-artifacts \
-  --exclude '__pycache__' --exclude '*.pyc' --exclude temp \
+  --exclude '__pycache__' --exclude '*.pyc' \
   --exclude '.aim_core/vessel_paths.py' \
-  --exclude '.aim_core/wiki_compiler.py' \
-  --exclude '.aim_core/agent_session_names.py' \
   "$AGY/aim-agy_os/" "$GROK/aim-agy_os/"
 
 # Re-apply / re-check Grok patches, then:
@@ -64,3 +52,6 @@ After sync, re-apply any lost patches (git diff against last aim-grok commit).
 ## Pin record
 
 Update `SOURCE.md` with new aim-agy commit SHA after each intentional sync.
+
+---
+[← Wiki index](../index.md)
