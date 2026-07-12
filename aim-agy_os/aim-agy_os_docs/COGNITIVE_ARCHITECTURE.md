@@ -15,7 +15,7 @@ This document defines the complete anatomical structure of the A.I.M. "Brain" an
 ## 3. The Persistent LLM Wiki (Synthesized Lore)
 *   **Trigger:** The `aim_core/aim_reincarnate.py` script spawns `session_summarizer.py` as a detached daemon.
 *   **Storage:** `wiki/` directory (Native Markdown).
-*   **Mechanism:** The daemon drops "Signal Skeletons" into `wiki/_ingest/` and (if agent mode is enabled) spawns a namespaced `{vessel}_wiki_{project}_{ts}` tmux session to weave knowledge into Markdown. Deterministic compile is the default on aim-grok.
+*   **Mechanism:** The daemon drops "Signal Skeletons" into `wiki/_ingest/` and spawns a `wiki_agent` tmux session to weave the new knowledge into existing Markdown files.
 *   **Purpose:** Human-readable, auto-maintaining architectural memory.
 
 ## 4. The Native Parquet Engine (The Subconscious)
