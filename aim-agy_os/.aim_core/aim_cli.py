@@ -16,8 +16,16 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 aim_root = os.path.dirname(current_dir)
 venv_python = os.path.join(aim_root, "venv", "bin", "python3")
 
-if os.path.exists(venv_python) and sys.executable != venv_python:
-    os.execv(venv_python, [venv_python] + sys.argv)
+# Prefer the engine venv. Compare realpaths so python vs python3 symlinks match.
+# Re-exec with argv[1:] so `python -m pytest` does not become
+# `python3 /path/to/python -m pytest` (broken).
+if os.path.exists(venv_python):
+    try:
+        same = os.path.realpath(sys.executable) == os.path.realpath(venv_python)
+    except OSError:
+        same = (sys.executable == venv_python)
+    if not same:
+        os.execv(venv_python, [venv_python] + sys.argv[1:])
 
 # --- CONFIG BOOTSTRAP ---
 src_dir = os.path.join(aim_root, ".aim_core")
