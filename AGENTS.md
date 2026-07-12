@@ -45,7 +45,14 @@ Examples:
 - **Directive** (fix/build/merge): execute within scope only.
 
 ## Reincarnation
-When context is heavy: write gameplan per `aim-agy_os/aim-agy_os_docs/GAMEPLAN_SOP.md`, then use reincarnation tools. Session transcripts for Grok live under `~/.grok/sessions/` (not Antigravity brain).
+When context is heavy: write gameplan per `aim-agy_os/aim-agy_os_docs/GAMEPLAN_SOP.md`, then use reincarnation / pulse tools.
+
+**Transcripts (Phase 1):** Grok stores history at  
+`~/.grok/sessions/<urlencode(cwd)>/<session_id>/chat_history.jsonl`  
+Resolver: `aim-agy_os/.aim_core/vessel_paths.py` (Grok first, AGY brain fallback).
+
+## Tool map
+See `TOOL_MAP.md`. Upstream sync: `SYNC_FROM_AIM_AGY.md`.
 
 ## Workspace isolation
 - Engine and memory under `aim-agy_os/`.

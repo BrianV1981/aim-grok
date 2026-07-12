@@ -13,23 +13,26 @@ def main():
     parser.add_argument("--auto-copy", action="store_true", help="Automatically copy found files without prompting")
     args = parser.parse_args()
 
-    # The hidden directory where Antigravity CLI stores session logs for isolated sub-environments
-    tmp_dir = os.path.expanduser("~/.gemini/antigravity-cli/brain")
     dest_dir = Path(args.dest)
     dest_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"--- A.I.M. BENCHMARK RECOVERY PROTOCOL ---")
-    print(f"Searching hidden Antigravity CLI temporary environment caches...")
-    print(f"Path: {tmp_dir}/*/.system_generated/logs/*.jsonl\n")
+    print(f"Searching Grok sessions + Antigravity brain caches...\n")
 
-    if not os.path.exists(tmp_dir):
-        print(f"Error: Could not find the global Antigravity CLI tmp directory at {tmp_dir}")
-        return
-
-    # Load workspace mapping from history
     import json
-    history_file = os.path.expanduser("~/.gemini/antigravity-cli/history.jsonl")
     workspace_map = {}
+    files = []
+
+    # Grok sessions
+    grok_root = os.path.expanduser("~/.grok/sessions")
+    if os.path.isdir(grok_root):
+        grok_files = glob.glob(os.path.join(grok_root, "*", "*", "chat_history.jsonl"))
+        files.extend(grok_files)
+        print(f"Grok: found {len(grok_files)} chat_history.jsonl under {grok_root}")
+
+    # Antigravity brain (legacy)
+    tmp_dir = os.path.expanduser("~/.gemini/antigravity-cli/brain")
+    history_file = os.path.expanduser("~/.gemini/antigravity-cli/history.jsonl")
     if os.path.exists(history_file):
         try:
             with open(history_file, 'r') as f:
@@ -40,11 +43,18 @@ def main():
                     ws = data.get('workspace')
                     if cid and ws:
                         workspace_map[cid] = os.path.basename(ws)
-        except: pass
+        except Exception:
+            pass
 
-    # Find all jsonl files in the chats subdirectories
-    search_pattern = os.path.join(tmp_dir, "*", ".system_generated", "logs", "*.jsonl")
-    files = glob.glob(search_pattern)
+    if os.path.isdir(tmp_dir):
+        search_pattern = os.path.join(tmp_dir, "*", ".system_generated", "logs", "*.jsonl")
+        agy_files = glob.glob(search_pattern)
+        files.extend(agy_files)
+        print(f"AGY: found {len(agy_files)} transcripts under {tmp_dir}")
+
+    if not files:
+        print("Error: No session transcripts found under Grok or Antigravity paths.")
+        return
 
     # Filter by time
     current_time = time.time()

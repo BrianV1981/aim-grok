@@ -45,7 +45,7 @@ def extract_signal(json_path):
 
                 if m_role == "user" or m_role == "system":
                     fragment["text"] = process_content(content)
-                elif m_role in ["agy", "model"]:
+                elif m_role in ["agy", "model", "assistant"]:
                     text = process_content(content)
                     
                     # Legacy thought block extraction
@@ -67,7 +67,14 @@ def extract_signal(json_path):
                         name = call.get("name") or call.get("function", {}).get("name")
                         args = call.get("args") or call.get("function", {}).get("arguments")
                         fragment["actions"].append({ "tool": name, "intent": str(args)[:200] })
+                elif m_role == "reasoning":
+                    # Grok reasoning channel — keep as assistant-thought style signal
+                    fragment["role"] = "model"
+                    fragment["text"] = ""
+                    fragment["thoughts"] = [{"text": process_content(content)[:2000]}]
+                    fragment["actions"] = []
                 else:
+                    # Skip tool_result and other noise
                     continue
                 
                 signal.append(fragment)

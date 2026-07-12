@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "aim-engram": {
+      "command": "/home/kingb/aim-grok/aim-agy_os/venv/bin/python3",
+      "args": [
+        "/home/kingb/aim-grok/aim-agy_os/.aim_core/mcp_server.py"
+      ],
+      "env": {
+        "PYTHONPATH": "/home/kingb/aim-grok/aim-agy_os:/home/kingb/aim-grok/aim-agy_os/.aim_core"
+      }
+    }
+  }
+}

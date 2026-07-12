@@ -23,22 +23,37 @@ TMP_CHATS_DIR = CONFIG['paths'].get('tmp_chats_dir')
 ARCHIVE_RAW_DIR = os.path.join(AIM_ROOT, "archive/raw")
 
 def mirror_transcripts():
-    """Ultra-fast mirroring of global transcripts to local archive."""
-    if not os.path.exists(TMP_CHATS_DIR): return
+    """Mirror vessel transcripts (Grok chat_history + legacy flat JSON) into archive/raw."""
     os.makedirs(ARCHIVE_RAW_DIR, exist_ok=True)
-    
-    # Mirror all JSON transcripts
-    transcripts = glob.glob(os.path.join(TMP_CHATS_DIR, "*.json"))
     count = 0
-    for t in transcripts:
-        filename = os.path.basename(t)
+    candidates = []
+
+    # Grok: recursive chat_history.jsonl under tmp_chats_dir / sessions root
+    if TMP_CHATS_DIR and os.path.isdir(TMP_CHATS_DIR):
+        candidates.extend(glob.glob(os.path.join(TMP_CHATS_DIR, "**", "chat_history.jsonl"), recursive=True))
+        candidates.extend(glob.glob(os.path.join(TMP_CHATS_DIR, "*.json")))
+        candidates.extend(glob.glob(os.path.join(TMP_CHATS_DIR, "*.jsonl")))
+
+    try:
+        from vessel_paths import find_session_transcripts
+        from config_utils import PROJECT_ROOT as HOST_ROOT
+        for t in find_session_transcripts(HOST_ROOT or AIM_ROOT, prefer="auto"):
+            if t not in candidates:
+                candidates.append(t)
+    except Exception:
+        pass
+
+    for t in candidates:
+        if not os.path.isfile(t):
+            continue
+        # Flatten: session_id__filename
+        parent = os.path.basename(os.path.dirname(t))
+        filename = f"{parent}__{os.path.basename(t)}"
         dest = os.path.join(ARCHIVE_RAW_DIR, filename)
-        
-        # Only copy if new or updated
         if not os.path.exists(dest) or os.path.getmtime(t) > os.path.getmtime(dest):
             shutil.copy2(t, dest)
             count += 1
-            
+
     if count > 0:
         sys.stderr.write(f"[PORTER] Mirrored {count} transcripts to local archive.\n")
 

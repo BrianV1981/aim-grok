@@ -9,9 +9,9 @@ This workspace ports the [aim-agy](https://github.com/BrianV1981/aim-agy) engine
 | Phase | State |
 |-------|--------|
 | 0 — Bootstrap engine + venv + seed memory | **Done** |
-| 1 — Tool surface / path mapping for Grok | Next |
-| 2 — Project skills + hooks | Next |
-| 3 — Reincarnation / session salvage for Grok transcripts | Later |
+| 1 — Tool surface / Grok sessions / skills / MCP | **Done** |
+| 2 — Deeper reincarnation UX + hook parity | Next |
+| 3 — Optional GitHub remote + CI on aim-grok | Later |
 
 **Upstream pin:** `aim-agy` `d07e41b` (post P0/P1 cleanup merges #66–#72).
 

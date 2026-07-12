@@ -47,17 +47,33 @@ def generate_handoff_pulse(explicit_session_id=None):
     Reads the latest significant session transcript directly from the native CLI temporary folder
     (to bypass context compression logic), extracts the signal, and overwrites CURRENT_PULSE.md.
     """
-    project_dir = os.path.abspath(AIM_ROOT)
+    # Prefer PROJECT_ROOT (host vessel) then AIM_ROOT (engine dir)
+    project_dir = os.path.abspath(PROJECT_ROOT if PROJECT_ROOT else AIM_ROOT)
     raw_files = []
-    
-    # NEW LOGIC: Explicit Session ID bypasses the flimsy lookup entirely
-    if explicit_session_id:
-        path = os.path.expanduser(f"~/.gemini/antigravity-cli/brain/{explicit_session_id}/.system_generated/logs/transcript.jsonl")
+
+    try:
+        from vessel_paths import find_session_transcripts
+        raw_files = find_session_transcripts(
+            project_dir,
+            explicit_session_id=explicit_session_id,
+            prefer="auto",  # Grok chat_history first, AGY brain fallback
+        )
+        if raw_files:
+            print(f"Handoff Generator: Found {len(raw_files)} transcript(s) via vessel_paths (prefer auto/Grok)")
+            if explicit_session_id:
+                print(f"Handoff Generator: session hint={explicit_session_id}")
+    except Exception as e:
+        print(f"Handoff Generator: vessel_paths unavailable ({e}); using legacy AGY paths")
+
+    # Legacy AGY-only fallback if vessel_paths found nothing
+    if not raw_files and explicit_session_id:
+        path = os.path.expanduser(
+            f"~/.gemini/antigravity-cli/brain/{explicit_session_id}/.system_generated/logs/transcript.jsonl"
+        )
         if os.path.exists(path):
             raw_files.append(path)
-            print(f"Handoff Generator: Using explicit session ID {explicit_session_id}")
-    
-    # FALLBACK LOGIC: Legacy backwards-scan if no session ID provided
+            print(f"Handoff Generator: Using explicit AGY session ID {explicit_session_id}")
+
     if not raw_files:
         history_file = os.path.expanduser("~/.gemini/antigravity-cli/history.jsonl")
         if os.path.exists(history_file):
@@ -68,19 +84,21 @@ def generate_handoff_pulse(explicit_session_id=None):
                         data = json.loads(line)
                         if data.get('workspace') == project_dir:
                             cid = data.get('conversationId')
-                            path = os.path.expanduser(f"~/.gemini/antigravity-cli/brain/{cid}/.system_generated/logs/transcript.jsonl")
+                            path = os.path.expanduser(
+                                f"~/.gemini/antigravity-cli/brain/{cid}/.system_generated/logs/transcript.jsonl"
+                            )
                             if cid and os.path.exists(path) and path not in raw_files:
                                 raw_files.append(path)
             except Exception as e:
                 print(f"Handoff Generator: Warning reading history: {e}")
-        
-        if not raw_files:
-            raw_files = glob.glob(os.path.join(ARCHIVE_RAW_DIR, "*.jsonl"))
-            
+
     if not raw_files:
-        print("Handoff Generator: No raw transcripts found.")
+        raw_files = glob.glob(os.path.join(ARCHIVE_RAW_DIR, "*.jsonl"))
+
+    if not raw_files:
+        print("Handoff Generator: No raw transcripts found (checked Grok sessions + AGY brain).")
         return
-        
+
     raw_files.sort(key=os.path.getmtime, reverse=True)
     latest_transcript = raw_files[0]
     
