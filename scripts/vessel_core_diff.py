@@ -111,13 +111,17 @@ def collect_py_modules(core: Path) -> dict[str, Path]:
     out: dict[str, Path] = {}
     if not core.is_dir():
         return out
+    core = core.resolve()
     for p in core.rglob("*.py"):
-        if any(part in SKIP_DIR_PARTS for part in p.parts):
+        # Only skip noise dirs *under* the core root — never filter on parent
+        # path segments like .../workspace/issue-11/... (worktree paths).
+        try:
+            rel_parts = p.resolve().relative_to(core).parts
+        except ValueError:
             continue
-        rel = p.relative_to(core).as_posix()
-        if rel == "__init__.py" or rel.endswith("/__init__.py"):
-            # keep package inits; still useful for structure
-            pass
+        if any(part in SKIP_DIR_PARTS for part in rel_parts[:-1]):
+            continue
+        rel = Path(*rel_parts).as_posix() if rel_parts else p.name
         out[rel] = p
     return out
 
