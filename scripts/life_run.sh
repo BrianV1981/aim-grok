@@ -37,29 +37,6 @@ else
   echo "Cloning https://github.com/BrianV1981/aim-grok.git (depth 1)"
   git clone --depth 1 https://github.com/BrianV1981/aim-grok.git vessel
   cd "$TEST_DIR/vessel"
-  # Overlay latest reincarnate/wiki fixes from local if ahead of remote
-  if [[ -d "$ROOT_SRC/aim-agy_os/.aim_core" ]]; then
-    echo "Overlaying local engine hotfixes for reincarnate/wiki from $ROOT_SRC"
-    rsync -a \
-      "$ROOT_SRC/aim-agy_os/.aim_core/reincarnation/" \
-      "$TEST_DIR/vessel/aim-agy_os/.aim_core/reincarnation/"
-    rsync -a \
-      "$ROOT_SRC/aim-agy_os/.aim_core/wiki_compiler.py" \
-      "$ROOT_SRC/aim-agy_os/.aim_core/wiki_tools.py" \
-      "$ROOT_SRC/aim-agy_os/.aim_core/vessel_paths.py" \
-      "$ROOT_SRC/aim-agy_os/.aim_core/aim_cli.py" \
-      "$ROOT_SRC/aim-agy_os/.aim_core/config_utils.py" \
-      "$ROOT_SRC/aim-agy_os/.aim_core/handoff_pulse_generator.py" \
-      "$ROOT_SRC/aim-agy_os/.aim_core/extract_signal.py" \
-      "$ROOT_SRC/aim-agy_os/hooks/session_summarizer.py" \
-      "$TEST_DIR/vessel/aim-agy_os/.aim_core/" 2>/dev/null || true
-    mkdir -p "$TEST_DIR/vessel/aim-agy_os/hooks"
-    cp -a "$ROOT_SRC/aim-agy_os/hooks/session_summarizer.py" \
-      "$TEST_DIR/vessel/aim-agy_os/hooks/"
-    # aim_cli/config go under .aim_core not hooks - fix copy
-    cp -a "$ROOT_SRC/aim-agy_os/.aim_core/aim_cli.py" "$TEST_DIR/vessel/aim-agy_os/.aim_core/"
-    cp -a "$ROOT_SRC/aim-agy_os/.aim_core/config_utils.py" "$TEST_DIR/vessel/aim-agy_os/.aim_core/"
-  fi
 fi
 
 echo "[*] setup.sh"
