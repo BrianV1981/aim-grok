@@ -21,6 +21,7 @@ from reincarnation.gameplan_manager import load_and_validate_gameplan, cleanup_g
 from reincarnation.background_tasks import trigger_background_pipelines
 from reincarnation.context_builder import fetch_issue_context, build_wakeup_prompt
 from reincarnation.teleport_engine import get_current_tmux_session, spawn_new_agent, execute_teleport
+from reincarnation.session_naming import reincarnation_session_name
 
 def main():
     parser = argparse.ArgumentParser(description="A.I.M. Reincarnation Protocol")
@@ -45,12 +46,8 @@ def main():
     issues = fetch_issue_context(AIM_ROOT)
     prompt = build_wakeup_prompt(gameplan, issues)
     
-    # 3. Spawn & Teleport
-    # Vessel-specific prefix so multi-CLI hosts can tell grok/agy/opencode sessions apart.
-    # aim-grok default is "grok"; life_run and peers may set AIM_VESSEL_CLI.
-    vessel = (os.environ.get("AIM_VESSEL_CLI") or "grok").strip().lower()
-    vessel = "".join(c if c.isalnum() or c in "-_" else "_" for c in vessel) or "grok"
-    session_name = f"{vessel}_reincarnation_{int(time.time())}"
+    # 3. Spawn & Teleport (vessel-prefixed: grok_reincarnation_* by default)
+    session_name = reincarnation_session_name()
     spawn_new_agent(workspace, session_name, prompt)
     cleanup_gameplan(AIM_ROOT)
     execute_teleport(current_tmux, session_name)
