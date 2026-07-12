@@ -10,14 +10,12 @@ __pycache__/
 *.pyc
 *.log
 .DS_Store
-
 # Live memory (seed stays in assets/)
 aim-agy_os/memory/
 aim-agy_os/memory_lance/
 aim-agy_os/memory_lance.bak/
 memory_lance/
 *.engram
-
 # Worktrees & runtime
 workspace/
 aim-agy_os/workspace/
@@ -26,11 +24,12 @@ aim-agy_os/continuity/
 aim-agy_os/.aim_core/temp/
 hooks/.state/
 tmp/
-
 # OS junk
 *:Zone.Identifier
 .directory
-
 # Local only
 patch.diff
 aim-agy_os/memory-wiki/_raw_logs/
+# Caches / local
+.pytest_cache/
+aim-agy_os/memory-wiki/daemon.log

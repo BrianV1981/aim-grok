@@ -1,5 +1,11 @@
 # Changelog — aim-grok
 
+## [v0.2.1] - 2026-07-12
+- Public v0 packaging: README, CONTRIBUTING, CONTRIBUTORS, SECURITY
+- GitHub issue/PR templates
+- Deterministic memory wiki + vessel sync from aim-agy P2
+- Grok session handoff, skills, MCP configs
+
 ## [v0.2.1-sync] - 2026-07-12
 - Sync engine from aim-agy `947c538` (P2: path, heap, docs, traceback, CI, prune-remote)
 - Preserved Grok overlays (`vessel_paths`, session handoff, vessel `config_utils`)
