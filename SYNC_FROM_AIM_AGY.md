@@ -2,6 +2,14 @@
 
 aim-agy remains the **upstream** for Antigravity + shared engine. aim-grok **vendors** `aim-agy_os/` and applies Grok overlays.
 
+**Three-vessel drift check** (agy · grok · opencode):
+
+```bash
+python3 scripts/vessel_core_diff.py --report-only
+```
+
+See `scripts/VESSEL_LOCKSTEP.md` for lockstep policy and OpenCode port rules.
+
 ## What is overlay (do not clobber blindly)
 
 | Path | Owner |
