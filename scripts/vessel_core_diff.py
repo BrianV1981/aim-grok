@@ -40,11 +40,21 @@ DEFAULTS = {
 }
 
 # Relative path from vessel root → engine core
+# Goal: all vessels nested under aim-agy_os/.aim_core (opencode may still be flat during migration)
 CORE_REL = {
     "agy": Path("aim-agy_os/.aim_core"),
     "grok": Path("aim-agy_os/.aim_core"),
-    "opencode": Path("aim_core"),
+    "opencode": Path("aim_core"),  # migrate → aim-agy_os/.aim_core
 }
+
+
+def _resolve_opencode_core(root: Path) -> Path:
+    """Prefer nested soul layout; fall back to legacy flat aim_core/."""
+    nested = root / "aim-agy_os" / ".aim_core"
+    flat = root / "aim_core"
+    if nested.is_dir():
+        return nested
+    return flat
 
 SKIP_DIR_PARTS = {
     "__pycache__",
@@ -113,6 +123,8 @@ def collect_py_modules(core: Path) -> dict[str, Path]:
 
 
 def resolve_core(vessel: str, root: Path) -> Path:
+    if vessel == "opencode":
+        return _resolve_opencode_core(root).resolve()
     return (root / CORE_REL[vessel]).resolve()
 
 

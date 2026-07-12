@@ -145,8 +145,8 @@ export AIM_REINCARNATE_NO_TELEPORT=1
 export AIM_WIKI_MODE=deterministic
 export AIM_WORKSPACE="$TEST_DIR/vessel"
 
-# Capture sessions before (vessel+role prefix: grok_reincarnation_*)
-REINC_PREFIX="${AIM_VESSEL_CLI:-grok}_reincarnation_"
+# Capture sessions before (soul role token: reincarnate → grok_reincarnate_*)
+REINC_PREFIX="${AIM_VESSEL_CLI:-grok}_reincarnate_"
 SESSIONS_BEFORE=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | grep -c "$REINC_PREFIX" || true)
 
 ./aim-agy_os/venv/bin/python aim-agy_os/.aim_core/aim_reincarnate.py \

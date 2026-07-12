@@ -19,6 +19,12 @@ See `scripts/VESSEL_LOCKSTEP.md` for lockstep policy and OpenCode port rules.
 | `.grok/` skills | aim-grok |
 | `.vscode/mcp.json`, `.grok/mcp.json` | aim-grok |
 | `vessel_paths.py` | aim-grok (port back to aim-agy later if desired) |
+| `wiki_compiler.py` | aim-grok deterministic wiki |
+| Grok `teleport_engine` / pulse extract / porter / recover | aim-grok harness |
+| Root `scripts/vessel_core_diff.py` fleet tooling | aim-grok orchestrator |
+
+**Layout goal:** all vessels use nested `aim-agy_os/` (opencode migrating from flat `aim_core/`). Identical soul; harness overlays only.
+
 | Grok patches in `extract_signal.py`, `handoff_pulse_generator.py`, `session_porter.py`, `recover_json_logs.py`, `config_utils.py` tmp path | aim-grok |
 
 ## Safe rsync (engine only)

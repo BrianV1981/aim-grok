@@ -8,6 +8,8 @@
 | Grok overlays | **aim-grok** | See `SYNC_FROM_AIM_AGY.md` denylist |
 | OpenCode host | **aim-opencode** | Port from agy; keep OpenCode-only modules local |
 
+**Layout goal (Operator 2026-07-12):** all vessels use **nested** `aim-agy_os/` (same shape as agy/grok). Identical soul tree as far as practical; **harness overlays only** where the CLI differs (spawn binary, transcript paths, skills dir). aim-opencode migrates off flat `aim_core/`.
+
 **Never** open parallel “same feature” PRs on two vessels. File sibling tickets, implement once on soul, sync/port.
 
 ## Diff check (all three)
