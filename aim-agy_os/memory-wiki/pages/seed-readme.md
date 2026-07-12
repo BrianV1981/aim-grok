@@ -1,3 +1,11 @@
+# README
+
+*Ingested from `seed_readme.md` on 2026-07-12*
+
+# README
+
+*Seeded from `/home/kingb/aim-grok/README.md`*
+
 # aim-grok
 
 **A.I.M. for Grok CLI** — Phase 0 scaffold.
@@ -10,8 +18,8 @@ This workspace ports the [aim-agy](https://github.com/BrianV1981/aim-agy) engine
 |-------|--------|
 | 0 — Bootstrap engine + venv + seed memory | **Done** |
 | 1 — Tool surface / Grok sessions / skills / MCP | **Done** |
-| 2 — Path fix, pulse, wiki, upstream sync | **Done** |
-| 3 — Optional GitHub remote + full reincarnate teleport | Optional |
+| 2 — Deeper reincarnation UX + hook parity | Next |
+| 3 — Optional GitHub remote + CI on aim-grok | Later |
 
 **Upstream pin:** `aim-agy` `d07e41b` (post P0/P1 cleanup merges #66–#72).
 
@@ -45,9 +53,6 @@ cd /home/kingb/aim-grok
 ./aim search "GitOps"
 ./aim map
 ./aim doctor
-./aim wiki search "vessel"
-./aim wiki bootstrap   # first-time wiki seed
-./aim wiki process     # after dropping files in memory-wiki/_ingest/
 
 # or:
 aim-agy_os/venv/bin/python3 aim-agy_os/.aim_core/aim_cli.py doctor
@@ -82,3 +87,6 @@ Sync process (later): cherry-pick or rsync `.aim_core` from aim-agy main; keep G
 ## License
 
 MIT (same as aim-agy).
+
+---
+[← Wiki index](../index.md)

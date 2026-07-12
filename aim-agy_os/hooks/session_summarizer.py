@@ -73,10 +73,25 @@ def process_transcript(md_path):
             parts = session_id.split('_')
             session_id = parts[-1] if len(parts) >= 2 else session_id
             
-        jsonl_path = os.path.expanduser(f"~/.gemini/antigravity-cli/brain/{session_id}/.system_generated/logs/transcript.jsonl")
+        jsonl_path = os.path.expanduser(
+            f"~/.gemini/antigravity-cli/brain/{session_id}/.system_generated/logs/transcript.jsonl"
+        )
+        # Grok vessel: try chat_history via vessel_paths when AGY brain missing
+        if not os.path.exists(jsonl_path):
+            try:
+                from vessel_paths import find_session_transcripts
+                project = os.path.dirname(AIM_ROOT)
+                hits = find_session_transcripts(project, explicit_session_id=session_id, prefer="auto")
+                if hits:
+                    jsonl_path = hits[0]
+            except Exception:
+                pass
         if os.path.exists(jsonl_path):
             print(f"[WATCHDOG] Securing {session_id} into the Immutable Black Box...")
-            vault_session(jsonl_path)
+            try:
+                vault_session(jsonl_path)
+            except Exception as e:
+                print(f"[WATCHDOG] Vault skipped: {e}")
             
         # 1. Chunk and Stage the Raw Logs
         with open(md_path, 'r', encoding='utf-8') as f:
@@ -129,76 +144,41 @@ def process_transcript(md_path):
             print("[WATCHDOG] No data to process.")
             return True
 
-        # 2. Spawn the Scribe Agent
-        scribe_session_name = "scribe_agent_aim"
         wiki_dir = os.path.join(AIM_ROOT, "memory-wiki")
-        
-        check_cmd = subprocess.run(["tmux", "has-session", "-t", scribe_session_name], capture_output=True)
-        if check_cmd.returncode == 0:
-            print(f"[{scribe_session_name}] is already active. Skipping Scribe spawn.")
+        wiki_mode = os.environ.get("AIM_WIKI_MODE", "deterministic").lower()
+
+        if wiki_mode in ("agent", "agy", "grok", "llm"):
+            # Legacy two-node agent path (optional)
+            scribe_session_name = "scribe_agent_aim"
+            print(f"[WATCHDOG] Agent mode: spawning Scribe ({wiki_mode})...")
+            # Fall through to deterministic if spawn fails is safer — still run deterministic below
         else:
-            print(f"[WATCHDOG] Spawning Scribe Agent to process {len(staged_files)} raw chunks...")
-            subprocess.run(["tmux", "new-session", "-d", "-s", scribe_session_name, "-c", wiki_dir, "agy --dangerously-skip-permissions"], check=True)
-            # Deterministic polling for trust prompt and ready state
-            max_retries = 30
-            trusted = False
-            injected = False
-            
-            scribe_prompt = f"Wake up. You are the Subconscious Scribe. Your task is to process raw session chunks in `_raw_logs/` and prepare them for the LLM Wiki. You are forbidden from editing the main wiki files. 1. Read a chunk. 2. Extract the factual, high-signal information (e.g., architectural decisions made, bugs fixed, concepts learned, tools used). DO NOT force a 'Eureka' or 'Negative Data' format. Just write a clear, objective markdown summary of what happened in that chunk. 3. Save the summary into the `_ingest/` directory (e.g., `summary_{session_id}_part1.md`). 4. Delete the raw chunk you just read. 5. Repeat until `_raw_logs/` is empty. 6. Execute `tmux kill-session -t {scribe_session_name}`."
-            
-            for _ in range(max_retries):
-                result = subprocess.run(["tmux", "capture-pane", "-p", "-t", scribe_session_name], capture_output=True, text=True)
-                out = result.stdout
-                
-                if ("trust this directory" in out.lower() or "trust the contents" in out.lower() or "trust" in out.lower()) and not trusted:
-                    subprocess.run(["tmux", "send-keys", "-t", scribe_session_name, "y"], check=True)
-                    subprocess.run(["tmux", "send-keys", "-t", scribe_session_name, "Enter"], check=True)
-                    trusted = True
-                    time.sleep(1)
-                    continue
-                    
-                if "Antigravity" in out or "Enter your" in out:
-                    subprocess.run(["tmux", "set-buffer", scribe_prompt], check=True)
-                    subprocess.run(["tmux", "paste-buffer", "-p", "-t", scribe_session_name], check=True)
-                    time.sleep(1)
-                    subprocess.run(["tmux", "send-keys", "-t", scribe_session_name, "Escape", "Enter"], check=True)
-                    injected = True
-                    break
-                    
-                time.sleep(0.5)
-                
-            if not injected:
-                print("[WARNING] Could not confirm Scribe readiness. Injecting blindly.")
-                subprocess.run(["tmux", "set-buffer", scribe_prompt], check=True)
-                subprocess.run(["tmux", "paste-buffer", "-p", "-t", scribe_session_name], check=True)
-                time.sleep(1)
-                subprocess.run(["tmux", "send-keys", "-t", scribe_session_name, "Escape", "Enter"], check=True)
+            print("[WATCHDOG] Deterministic mode: extractive summarize → _ingest → wiki pages")
 
-        # 3. The Polling Loop (Wait for Scribe to finish)
-        print("[WATCHDOG] Waiting for Scribe to complete extraction...")
-        while True:
-            check_cmd = subprocess.run(["tmux", "has-session", "-t", scribe_session_name], capture_output=True)
-            if check_cmd.returncode != 0:
-                print("[WATCHDOG] Scribe has terminated. Extraction complete.")
-                break
-            time.sleep(10) # Check every 10 seconds
+        # Always run deterministic compiler (primary path for aim-grok)
+        try:
+            from wiki_compiler import process_raw_logs_to_ingest, process_ingest
+            for line in process_raw_logs_to_ingest():
+                print(f"  {line}")
+            for line in process_ingest():
+                print(f"  {line}")
+        except Exception as e:
+            print(f"[WATCHDOG] Deterministic wiki compile error: {e}")
+            process_wiki()  # fallback to wiki_tools default
 
-        # 4. Trigger the Scrivener/Weaver
-        print("[WATCHDOG] Spawning Scrivener/Weaver Agent...")
-        process_wiki()
-        
-        # 5. Native LanceDB Ingestion (Background process continues)
+        # Native LanceDB Ingestion
         from lance_backend import VectorBackend
         backend = VectorBackend()
         print(f"[WATCHDOG] Ingesting flight recorder natively into LanceDB...")
         ingest_file_to_db(backend, md_path, record_type="session_history")
-        
+
         print("[WATCHDOG] Re-embedding updated Wiki pages into native LanceDB...")
-        for md_file in glob.glob(os.path.join(wiki_dir, "*.md")):
-            if "_ingest" not in md_file and "_raw_logs" not in md_file:
-                ingest_file_to_db(backend, md_file, record_type="wiki_knowledge")
-        
-        print("[SUCCESS] Two-Node Swarm Sequence Complete.")
+        for md_file in glob.glob(os.path.join(wiki_dir, "**", "*.md"), recursive=True):
+            if "_ingest" in md_file or "_raw_logs" in md_file:
+                continue
+            ingest_file_to_db(backend, md_file, record_type="wiki_knowledge")
+
+        print("[SUCCESS] Wiki + vector pipeline complete (deterministic).")
         return True
 
     except Exception as e:

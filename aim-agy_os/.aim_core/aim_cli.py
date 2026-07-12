@@ -94,8 +94,11 @@ def cmd_wiki(args):
         search_wiki(query)
     elif args.wiki_command == "process":
         process_wiki()
+    elif args.wiki_command == "bootstrap":
+        from wiki_compiler import bootstrap_wiki
+        bootstrap_wiki(include_history=True, history_limit=15)
     else:
-        print("Usage: aim wiki {search|process}")
+        print("Usage: aim wiki {search|process|bootstrap}")
 
 def cmd_map(args):
     """Prints the surgical Index of Keys."""
@@ -902,11 +905,18 @@ def main():
 
 
 
-    wiki_parser = subparsers.add_parser("memory-wiki", help="Manage the Persistent LLM Wiki")
-    wiki_subparsers = wiki_parser.add_subparsers(dest="wiki_command")
-    wiki_search = wiki_subparsers.add_parser("search", help="Search the Wiki using local lookup")
-    wiki_search.add_argument("query", nargs="+", help="The search query")
-    wiki_process = wiki_subparsers.add_parser("process", help="Process the memory-wiki/_ingest folder")
+    # Both `wiki` and `memory-wiki` map to the same handlers (docs say `aim wiki`)
+    for wiki_cmd_name in ("wiki", "memory-wiki"):
+        wiki_parser = subparsers.add_parser(wiki_cmd_name, help="Manage the Persistent LLM Wiki")
+        wiki_subparsers = wiki_parser.add_subparsers(dest="wiki_command")
+        wiki_search = wiki_subparsers.add_parser("search", help="Search the Wiki using local lookup")
+        wiki_search.add_argument("query", nargs="+", help="The search query")
+        wiki_bootstrap = wiki_subparsers.add_parser(
+            "bootstrap", help="Seed + compile wiki deterministically (aim-grok)"
+        )
+        wiki_process = wiki_subparsers.add_parser(
+            "process", help="Process the memory-wiki/_ingest folder"
+        )
 
     subparsers.add_parser("map", help="Print the Index of Keys (Knowledge Map)")
 
@@ -966,7 +976,7 @@ def main():
     elif args.command == "status": cmd_status(args)
     elif args.command == "core-memory": cmd_core_memory(args)
     elif args.command == "search": cmd_search(args)
-    elif args.command == "memory-wiki": cmd_wiki(args)
+    elif args.command in ("memory-wiki", "wiki"): cmd_wiki(args)
     elif args.command == "map": cmd_map(args)
     elif args.command == "update": cmd_update(args)
     elif args.command in ["config", "tui"]: cmd_config(args)
