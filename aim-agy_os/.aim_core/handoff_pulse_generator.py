@@ -14,13 +14,22 @@ except ImportError:
     sys.path.append(os.path.join(AIM_ROOT, ".aim_core"))
     from extract_signal import extract_signal, skeleton_to_markdown
 
-# --- CONFIGURATION (Load from .aim_core/CONFIG.json) ---
+# --- CONFIGURATION (Load from .aim_core/CONFIG.json, soft-fail to defaults) ---
 CONFIG_PATH = os.path.join(PROJECT_ROOT, ".aim_core/CONFIG.json")
-with open(CONFIG_PATH, 'r') as f:
-    CONFIG = json.load(f)
+CONFIG = {}
+if os.path.isfile(CONFIG_PATH):
+    try:
+        with open(CONFIG_PATH, 'r') as f:
+            CONFIG = json.load(f)
+    except Exception as e:
+        print(f"Handoff Generator: Warning loading CONFIG.json: {e}")
+else:
+    print(f"Handoff Generator: No CONFIG at {CONFIG_PATH}; using defaults (vessel paths only)")
 
 CONTINUITY_DIR = os.path.join(AIM_ROOT, ".aim_core", "temp")
 ARCHIVE_RAW_DIR = os.path.join(AIM_ROOT, "archive/raw")
+os.makedirs(CONTINUITY_DIR, exist_ok=True)
+os.makedirs(ARCHIVE_RAW_DIR, exist_ok=True)
 
 def atomic_write(file_path, content):
     """

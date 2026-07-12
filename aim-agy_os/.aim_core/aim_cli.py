@@ -221,9 +221,13 @@ def cmd_fix(args):
     """Spawns a Git Worktree for a specific GitHub Issue ID."""
     issue_id = args.id
     branch_name = f"fix/issue-{issue_id}"
-    worktree_path = os.path.join(OS_DIR, "workspace", f"issue-{issue_id}")
+    # Worktrees live at the *vessel* root (BASE_DIR/PROJECT_ROOT), not under the
+    # engine payload. Using OS_DIR caused aim-agy_os/aim-agy_os/workspace/ when
+    # PROJECT_ROOT was mis-detected as the engine directory.
+    worktree_path = os.path.join(BASE_DIR, "workspace", f"issue-{issue_id}")
     print(f"--- A.I.M. FACTORY FLOOR (Issue #{issue_id}) ---")
     try:
+        os.makedirs(os.path.join(BASE_DIR, "workspace"), exist_ok=True)
         subprocess.run(["git", "worktree", "add", worktree_path, "-b", branch_name], cwd=BASE_DIR, check=True)
         
         # Copy the gitignored local CONFIG.json so the worktree can run tests natively
@@ -235,7 +239,7 @@ def cmd_fix(args):
             shutil.copy2(config_src, os.path.join(config_dest_dir, "CONFIG.json"))
             
         print(f"[SUCCESS] Worktree created at {worktree_path} on branch {branch_name}")
-        print(f"[ACTION] To start working, run: cd workspace/issue-{issue_id}")
+        print(f"[ACTION] To start working, run: cd {worktree_path}")
         print(f"[ACTION] When the bug is resolved, run: {CLI_NAME} push \"Fix: <description> (Closes #{issue_id})\"")
     except Exception as e:
         print(f"[ERROR] Failed to create worktree: {e}")
