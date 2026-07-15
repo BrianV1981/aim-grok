@@ -29,10 +29,7 @@ cp -a aim-agy_os ../
 cp -a aim-agy_os_docs ../ 2>/dev/null || true
 
 cp -n AGENTS.md ../ 2>/dev/null || true
-cp -n README.md ../ 2>/dev/null || true
 cp -n TOOLS.md ../ 2>/dev/null || true
-cp -n CHANGELOG.md ../ 2>/dev/null || true
-cp -n VERSION ../ 2>/dev/null || true
 
 cd ..
 rm -rf .aim_temp_clone
@@ -40,6 +37,11 @@ rm -rf .aim_temp_clone
 if [ ! -d ".git" ]; then
     git init
 fi
+
+[ ! -f README.md ] && touch README.md
+[ ! -f CHANGELOG.md ] && touch CHANGELOG.md
+[ ! -f VERSION ] && touch VERSION
+[ ! -f CONTRIBUTING.md ] && touch CONTRIBUTING.md
 
 # Base OS Provisioning (Moving the pre-baked DB to the active layer)
 mkdir -p aim-agy_os/memory_lance

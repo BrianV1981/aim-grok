@@ -30,13 +30,14 @@ Examples:
 2. File tickets with full context flags; branch via `./aim fix <id>` when available.
 3. Surgical staging only — never blind `git add .`.
 4. Blast-radius: prove destructive ops on isolated copies first.
+5. **Promote:** `aim promote` / `aim merge-batch` require Human-In-The-Loop stdin confirmation. When the CLI asks yes/no, use the UI modal / `ask_question` tool — never guess `yes`.
 
 ## Grok-specific tool map
 | Intent | Use |
 |--------|-----|
 | Shell | `run_terminal_command` |
 | Edit | `search_replace` / `write` / `read_file` |
-| Inter-agent tmux | skill `aim-communicate` (chalkboard + short paste) |
+| Inter-agent tmux | skill `aim-communicate` (chalkboard + short paste). **MUST** tag every message `[FROM:<your_tmux_session>] [REPLY_TO:<exact_reply_session>]` (discover FROM via `tmux display-message -p '#{session_name}'`). Prefer `scripts/tmux_send.sh`. Grok submit = Enter only; AGY = Esc then Enter. Never assume orchestrator is `aim-grok` when REPLY_TO is `grok-audit`. |
 | Memory search | `./aim search` or skill `aim-memory-search` |
 | Math | skill `aim-calc` |
 
@@ -46,6 +47,8 @@ Examples:
 
 ## Reincarnation
 When context is heavy: write gameplan per `aim-agy_os/aim-agy_os_docs/GAMEPLAN_SOP.md`, then use reincarnation / pulse tools.
+
+**Fleet orchestration (3 vessels):** If you are the orchestrator coordinating aim-agy / aim-grok / aim-opencode, read `scripts/FLEET_ORCHESTRATION.md` before multi-agent dispatch. Lockstep policy: `scripts/VESSEL_LOCKSTEP.md`.
 
 **Transcripts (Phase 1):** Grok stores history at  
 `~/.grok/sessions/<urlencode(cwd)>/<session_id>/chat_history.jsonl`  
