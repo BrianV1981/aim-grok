@@ -138,7 +138,17 @@ def generate_handoff_pulse(explicit_session_id=None):
         clean_path = os.path.join(CONTINUITY_DIR, "LAST_SESSION_FLIGHT_RECORDER.md")
         
         # Convert JSON skeleton into pure Markdown dialogue
-        session_id = os.path.basename(latest_transcript).replace('.jsonl', '')
+        # Session UUID = parent dir for chat_history.jsonl / updates.jsonl (never "chat_history")
+        try:
+            from vessel_paths import session_id_from_transcript_path
+            session_id = session_id_from_transcript_path(latest_transcript)
+        except Exception:
+            base = os.path.basename(latest_transcript)
+            if base in ("chat_history.jsonl", "updates.jsonl", "transcript.jsonl"):
+                session_id = os.path.basename(os.path.dirname(latest_transcript))
+            else:
+                session_id = base.replace(".jsonl", "")
+        print(f"Handoff Generator: session_id={session_id} source={latest_transcript}")
         md_content = skeleton_to_markdown(skeleton, session_id)
         
         now = datetime.now()
@@ -187,12 +197,30 @@ def generate_handoff_pulse(explicit_session_id=None):
         elif cognitive_mode == 'monolithic':
             import subprocess
             try:
-                # Use Popen instead of run so the background compiler does not block the reincarnation handoff
+                # Use Popen so reincarnation is not blocked; pass --bg so child does not re-exec to DEVNULL
                 log_path = os.path.join(AIM_ROOT, "memory-wiki", "daemon.log")
+                os.makedirs(os.path.dirname(log_path), exist_ok=True)
                 daemon_log = open(log_path, "a")
-                subprocess.Popen([sys.executable, os.path.join(AIM_ROOT, "hooks", "session_summarizer.py"), "--reincarnate", archive_path], 
-                               stdout=daemon_log, stderr=daemon_log, start_new_session=True)
-                print(f"      [Monolithic] Triggered Subconscious Wiki Daemon & Vector Ingestion (Logging to memory-wiki/daemon.log).")
+                daemon_log.write(
+                    f"\n--- handoff spawn {datetime.now().isoformat()} archive={archive_path} ---\n"
+                )
+                daemon_log.flush()
+                subprocess.Popen(
+                    [
+                        sys.executable,
+                        os.path.join(AIM_ROOT, "hooks", "session_summarizer.py"),
+                        "--reincarnate",
+                        archive_path,
+                        "--bg",
+                    ],
+                    stdout=daemon_log,
+                    stderr=daemon_log,
+                    start_new_session=True,
+                )
+                print(
+                    f"      [Monolithic] Triggered Subconscious Wiki Daemon & Vector Ingestion "
+                    f"(Logging to memory-wiki/daemon.log)."
+                )
             except Exception as e:
                 print(f"      [Monolithic] Subconscious daemon error: {e}")
         
