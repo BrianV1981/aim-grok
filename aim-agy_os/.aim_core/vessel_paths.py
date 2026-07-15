@@ -4,6 +4,8 @@ Vessel path resolution for multi-CLI A.I.M. (Grok primary on aim-grok, AGY fallb
 
 Grok session layout (observed):
   ~/.grok/sessions/<urlencode(cwd)>/<session_id>/chat_history.jsonl
+  ~/.grok/sessions/<urlencode(cwd)>/<session_id>/updates.jsonl   # durable; survives compact
+  ~/.grok/sessions/<urlencode(cwd)>/<session_id>/signals.json    # compactionCount, etc.
 
 Antigravity layout (legacy):
   ~/.gemini/antigravity-cli/brain/<session_id>/.system_generated/logs/transcript.jsonl
@@ -11,6 +13,7 @@ Antigravity layout (legacy):
 from __future__ import annotations
 
 import glob
+import json
 import os
 import urllib.parse
 from typing import List, Optional
@@ -34,34 +37,119 @@ def grok_workspace_session_dir(project_root: str) -> str:
     return os.path.join(grok_sessions_root(), encode_workspace_cwd(project_root))
 
 
+def session_id_from_transcript_path(path: str) -> str:
+    """
+    Prefer parent directory UUID when file is a known log basename.
+    e.g. .../019f5545-…/chat_history.jsonl → 019f5545-…
+         .../019f5545-…/updates.jsonl → 019f5545-…
+    """
+    base = os.path.basename(path)
+    if base in (
+        "chat_history.jsonl",
+        "updates.jsonl",
+        "transcript.jsonl",
+        "history.jsonl",
+    ):
+        return os.path.basename(os.path.dirname(path))
+    stem = base.replace(".jsonl", "")
+    if stem in ("chat_history", "updates", "transcript", "history"):
+        return os.path.basename(os.path.dirname(path))
+    return stem
+
+
+def _signals_prefer_updates(session_dir: str) -> bool:
+    signals = os.path.join(session_dir, "signals.json")
+    if not os.path.isfile(signals):
+        return False
+    try:
+        with open(signals, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return int(data.get("compactionCount") or 0) > 0
+    except Exception:
+        return False
+
+
+def _pick_grok_log_in_session(session_dir: str) -> Optional[str]:
+    """
+    Prefer durable updates.jsonl when larger or compacted (now parseable).
+    Always return a real file path when any log exists.
+    """
+    updates = os.path.join(session_dir, "updates.jsonl")
+    chat = os.path.join(session_dir, "chat_history.jsonl")
+    has_u = os.path.isfile(updates)
+    has_c = os.path.isfile(chat)
+    if has_u and has_c:
+        try:
+            u_sz = os.path.getsize(updates)
+            c_sz = os.path.getsize(chat)
+        except OSError:
+            u_sz = c_sz = 0
+        if _signals_prefer_updates(session_dir) or u_sz > max(c_sz * 2, 50_000):
+            return updates
+        return chat
+    if has_u:
+        return updates
+    if has_c:
+        return chat
+    return None
+
+
 def find_grok_transcripts(
     project_root: str,
     explicit_session_id: Optional[str] = None,
+    prefer_durable: bool = True,
 ) -> List[str]:
-    """Return chat_history.jsonl paths for this workspace, newest first."""
+    """
+    Return Grok transcript paths for this workspace, newest first.
+
+    When explicit_session_id is set, ONLY that session is returned (exclusive).
+    """
     found: List[str] = []
+    seen = set()
     ws_dir = grok_workspace_session_dir(project_root)
 
+    def _add(path: Optional[str]) -> None:
+        if path and os.path.isfile(path) and path not in seen:
+            seen.add(path)
+            found.append(path)
+
+    def _session_pick(session_dir: str) -> None:
+        if prefer_durable:
+            _add(_pick_grok_log_in_session(session_dir))
+        else:
+            chat = os.path.join(session_dir, "chat_history.jsonl")
+            if os.path.isfile(chat):
+                _add(chat)
+            else:
+                _add(_pick_grok_log_in_session(session_dir))
+
+    # --- EXCLUSIVE path: Operator / reincarnate --session-id ---
     if explicit_session_id:
-        # Direct session folder under workspace encode
-        candidate = os.path.join(ws_dir, explicit_session_id, "chat_history.jsonl")
-        if os.path.isfile(candidate):
-            found.append(candidate)
-        # Also allow bare path under sessions root
-        candidate2 = os.path.join(grok_sessions_root(), explicit_session_id, "chat_history.jsonl")
-        if os.path.isfile(candidate2) and candidate2 not in found:
-            found.append(candidate2)
+        candidates = [
+            os.path.join(ws_dir, explicit_session_id),
+            os.path.join(grok_sessions_root(), explicit_session_id),
+        ]
+        # also nested: sessions/<encoded_cwd>/<id>
+        if os.path.isdir(grok_sessions_root()):
+            for entry in glob.glob(
+                os.path.join(grok_sessions_root(), "*", explicit_session_id)
+            ):
+                candidates.append(entry)
+        for session_dir in candidates:
+            if os.path.isdir(session_dir):
+                _session_pick(session_dir)
+        found.sort(key=os.path.getmtime, reverse=True)
+        return found
 
     if os.path.isdir(ws_dir):
-        pattern = os.path.join(ws_dir, "*", "chat_history.jsonl")
-        for path in glob.glob(pattern):
-            if path not in found:
-                found.append(path)
+        for entry in glob.glob(os.path.join(ws_dir, "*")):
+            if os.path.isdir(entry):
+                _session_pick(entry)
 
-    # Fallback: any chat_history under sessions (last resort)
     if not found and os.path.isdir(grok_sessions_root()):
-        pattern = os.path.join(grok_sessions_root(), "*", "*", "chat_history.jsonl")
-        found.extend(glob.glob(pattern))
+        for entry in glob.glob(os.path.join(grok_sessions_root(), "*", "*")):
+            if os.path.isdir(entry):
+                _session_pick(entry)
 
     found.sort(key=os.path.getmtime, reverse=True)
     return found
@@ -71,7 +159,7 @@ def find_agy_transcripts(
     project_root: str,
     explicit_session_id: Optional[str] = None,
 ) -> List[str]:
-    """Return AGY transcript.jsonl paths, newest first."""
+    """Return AGY transcript.jsonl paths, newest first. Exclusive when session id set."""
     found: List[str] = []
     brain = agy_brain_root()
 
@@ -81,12 +169,11 @@ def find_agy_transcripts(
         )
         if os.path.isfile(path):
             found.append(path)
+        return found
 
     history_file = os.path.expanduser("~/.gemini/antigravity-cli/history.jsonl")
     if os.path.isfile(history_file):
         try:
-            import json
-
             project_dir = os.path.abspath(project_root)
             with open(history_file, "r") as f:
                 for line in f:
@@ -118,6 +205,7 @@ def find_session_transcripts(
     project_root: str,
     explicit_session_id: Optional[str] = None,
     prefer: str = "auto",
+    prefer_durable: bool = True,
 ) -> List[str]:
     """
     Discover session transcripts.
@@ -126,14 +214,19 @@ def find_session_transcripts(
       - "grok": Grok only
       - "agy": Antigravity only
       - "auto": Grok first if any, else AGY (default for aim-grok vessel)
+    prefer_durable: when True, Grok prefers updates.jsonl after compaction.
     """
     prefer = (prefer or "auto").lower()
     if prefer == "grok":
-        return find_grok_transcripts(project_root, explicit_session_id)
+        return find_grok_transcripts(
+            project_root, explicit_session_id, prefer_durable=prefer_durable
+        )
     if prefer == "agy":
         return find_agy_transcripts(project_root, explicit_session_id)
 
-    grok = find_grok_transcripts(project_root, explicit_session_id)
+    grok = find_grok_transcripts(
+        project_root, explicit_session_id, prefer_durable=prefer_durable
+    )
     if grok:
         return grok
     return find_agy_transcripts(project_root, explicit_session_id)
