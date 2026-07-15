@@ -1,7 +1,7 @@
 # Fleet lockstep: memory-wiki (aim-agy · aim-grok · aim-opencode)
 
-**Status:** FREEZE discipline until PR-A ships on soul first  
-**Date:** 2026-07-15  
+**Status:** Action B **DONE** on GitHub (2026-07-15) — pre-schema lockstep  
+**Soul tip:** `5b18bcf` · **Grok:** `1a947d5` · **OpenCode:** `fa2a7cd`  
 **Why this exists:** Operator concern — wiki/memory work is in flight; vessels already drift; we must not make Grok-only changes that orphan AGY/OpenCode.
 
 **Related:** `PLAN_LLM_WIKI_AIM_GROK.md` (vision + phases)
