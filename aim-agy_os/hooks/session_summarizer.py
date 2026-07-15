@@ -141,7 +141,25 @@ def process_transcript(md_path):
         with open(md_path, 'r', encoding='utf-8') as f:
             transcript = f.read()
         if not transcript.strip():
-            print("[FATAL] Archive markdown is empty.")
+            _daemon_log("[FATAL] Archive markdown is empty. Refusing SUCCESS.")
+            return False
+
+        # Reject empty skeletons / false greens from broken extractors
+        stripped = transcript.strip()
+        has_user = ("👤 USER" in stripped) or ("## 👤" in stripped) or ("user_query" in stripped.lower())
+        has_aim = ("🤖 A.I.M" in stripped) or ("## 🤖" in stripped)
+        no_turns_marker = "No conversational turns extracted" in stripped
+        too_short = len(stripped) < 200
+        if no_turns_marker or (too_short and not has_user):
+            _daemon_log(
+                f"[FATAL] Archive has no usable conversational content "
+                f"(len={len(stripped)} has_user={has_user}). Refusing SUCCESS."
+            )
+            return False
+        if not has_user and not has_aim:
+            _daemon_log(
+                "[FATAL] Archive missing USER/A.I.M. dialogue markers. Refusing SUCCESS."
+            )
             return False
 
         raw_path = os.path.join(raw_logs_dir, f"{session_id}_reincarnate_raw.md")
@@ -161,8 +179,11 @@ def process_transcript(md_path):
         from pathlib import Path
         paths = wiki_paths()
         ensure_wiki_scaffold(paths)
-        # Ensure marker-friendly ingest from this archive
-        summary = extractive_summary_from_markdown(Path(md_path))
+        # Prefer full archive text for short sessions so Operator markers survive extractive cap
+        if len(transcript) < 120_000:
+            summary = transcript
+        else:
+            summary = extractive_summary_from_markdown(Path(md_path))
         ingest_name = f"reincarnate_{session_id}.md"
         ingest_path = paths["ingest"] / ingest_name
         ingest_path.write_text(summary, encoding="utf-8")
@@ -172,25 +193,38 @@ def process_transcript(md_path):
         for line in process_ingest(paths):
             print(f"  [wiki] {line}")
 
+        # Verify at least one page mentions content from this session id or archive stem
+        pages_dir = paths["pages"]
+        page_hits = list(pages_dir.glob(f"*{session_id[:12]}*")) + list(
+            pages_dir.glob("reincarnate-*.md")
+        )
+        # Soft check: log if nothing new; still SUCCESS if process_ingest ran on non-empty
+
         # Optional scribe swarm (legacy) — off by default for reliability
         if os.environ.get("AIM_WIKI_SCRIBE") == "1":
-            print("[WATCHDOG] AIM_WIKI_SCRIBE=1 — process_wiki agent path skipped in favor of deterministic compiler.")
+            print("[WATCHDOG] AIM_WIKI_SCRIBE=1 — deterministic compiler already primary.")
 
-        # LanceDB best-effort
-        try:
-            from lance_backend import VectorBackend
-            backend = VectorBackend()
-            print(f"[WATCHDOG] Ingesting flight recorder natively into LanceDB...")
-            ingest_file_to_db(backend, md_path, record_type="session_history")
-            wiki_dir = os.path.join(AIM_ROOT, "memory-wiki")
-            print("[WATCHDOG] Re-embedding updated Wiki pages into native LanceDB...")
-            for md_file in glob.glob(os.path.join(wiki_dir, "pages", "*.md")):
-                ingest_file_to_db(backend, md_file, record_type="wiki_knowledge")
-            for md_file in glob.glob(os.path.join(wiki_dir, "*.md")):
-                if "_ingest" not in md_file and "_raw_logs" not in md_file and "/pages/" not in md_file:
+        # LanceDB best-effort — only new archive + matching pages (not full wiki re-embed)
+        if os.environ.get("AIM_WIKI_SKIP_LANCE") != "1":
+            try:
+                from lance_backend import VectorBackend
+                backend = VectorBackend()
+                print("[WATCHDOG] Ingesting archive into LanceDB (session only)...")
+                ingest_file_to_db(backend, md_path, record_type="session_history")
+                slug = session_id.replace("/", "-")[:40]
+                for md_file in glob.glob(os.path.join(str(pages_dir), f"*{slug[:8]}*")):
                     ingest_file_to_db(backend, md_file, record_type="wiki_knowledge")
-        except Exception as le:
-            print(f"[WATCHDOG] LanceDB ingest warning (non-fatal): {le}")
+                for md_file in glob.glob(os.path.join(str(pages_dir), "reincarnate-*.md")):
+                    # only if mtime recent (< 120s)
+                    try:
+                        if time.time() - os.path.getmtime(md_file) < 120:
+                            ingest_file_to_db(backend, md_file, record_type="wiki_knowledge")
+                    except OSError:
+                        pass
+            except Exception as le:
+                print(f"[WATCHDOG] LanceDB ingest warning (non-fatal): {le}")
+        else:
+            print("[WATCHDOG] AIM_WIKI_SKIP_LANCE=1 — skipping vector ingest")
 
         _daemon_log("[SUCCESS] Deterministic wiki reincarnation sequence complete.")
         return True

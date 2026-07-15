@@ -16,7 +16,7 @@ import glob
 import json
 import os
 import urllib.parse
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 
 def grok_sessions_root() -> str:
@@ -70,7 +70,10 @@ def _signals_prefer_updates(session_dir: str) -> bool:
 
 
 def _pick_grok_log_in_session(session_dir: str) -> Optional[str]:
-    """Prefer durable updates.jsonl when larger or compactionCount > 0."""
+    """
+    Prefer durable updates.jsonl when larger or compacted (now parseable).
+    Always return a real file path when any log exists.
+    """
     updates = os.path.join(session_dir, "updates.jsonl")
     chat = os.path.join(session_dir, "chat_history.jsonl")
     has_u = os.path.isfile(updates)
@@ -96,7 +99,11 @@ def find_grok_transcripts(
     explicit_session_id: Optional[str] = None,
     prefer_durable: bool = True,
 ) -> List[str]:
-    """Return Grok transcript paths for this workspace, newest first."""
+    """
+    Return Grok transcript paths for this workspace, newest first.
+
+    When explicit_session_id is set, ONLY that session is returned (exclusive).
+    """
     found: List[str] = []
     seen = set()
     ws_dir = grok_workspace_session_dir(project_root)
@@ -116,9 +123,23 @@ def find_grok_transcripts(
             else:
                 _add(_pick_grok_log_in_session(session_dir))
 
+    # --- EXCLUSIVE path: Operator / reincarnate --session-id ---
     if explicit_session_id:
-        for base in (ws_dir, grok_sessions_root()):
-            _session_pick(os.path.join(base, explicit_session_id))
+        candidates = [
+            os.path.join(ws_dir, explicit_session_id),
+            os.path.join(grok_sessions_root(), explicit_session_id),
+        ]
+        # also nested: sessions/<encoded_cwd>/<id>
+        if os.path.isdir(grok_sessions_root()):
+            for entry in glob.glob(
+                os.path.join(grok_sessions_root(), "*", explicit_session_id)
+            ):
+                candidates.append(entry)
+        for session_dir in candidates:
+            if os.path.isdir(session_dir):
+                _session_pick(session_dir)
+        found.sort(key=os.path.getmtime, reverse=True)
+        return found
 
     if os.path.isdir(ws_dir):
         for entry in glob.glob(os.path.join(ws_dir, "*")):
@@ -138,7 +159,7 @@ def find_agy_transcripts(
     project_root: str,
     explicit_session_id: Optional[str] = None,
 ) -> List[str]:
-    """Return AGY transcript.jsonl paths, newest first."""
+    """Return AGY transcript.jsonl paths, newest first. Exclusive when session id set."""
     found: List[str] = []
     brain = agy_brain_root()
 
@@ -148,6 +169,7 @@ def find_agy_transcripts(
         )
         if os.path.isfile(path):
             found.append(path)
+        return found
 
     history_file = os.path.expanduser("~/.gemini/antigravity-cli/history.jsonl")
     if os.path.isfile(history_file):
