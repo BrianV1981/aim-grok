@@ -1,8 +1,9 @@
 # Plan: Realize the LLM Wiki on aim-grok (then mirror to fleet)
 
-**Status:** Draft for Operator approval  
+**Status:** Phase 0–1 / PR-A **SHIPPED** on fleet (Schema-Version 2) — 2026-07-15  
 **Vessel:** aim-grok pilot **with fleet lockstep** (see `LOCKSTEP_WIKI_MEMORY_FLEET.md`)  
 **Date:** 2026-07-15  
+**Soul SHA (schema):** `0e7a77b` · Grok `ef5b5e9` · OpenCode `6414a7f`  
 **Goal:** Make `memory-wiki/` a **persistent, compounding, interlinked knowledge base** maintained under a real **schema**, not extractive session dumps or flaky one-line agent pastes.
 
 **North star:** Operator’s LLM Wiki pattern — raw sources immutable → LLM-owned wiki → schema (`AGENTS.md`) drives ingest / query / lint; knowledge compiled once and kept current.
