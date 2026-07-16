@@ -63,7 +63,7 @@ def vault_session(jsonl_path):
         return True
     except Exception as e:
         # Non-fatal: vault is forensic bonus, not reincarnate/wiki gate.
-        # (Headless hosts often lack a keyring backend — see issue #12.)
+        # (Headless hosts often lack a keyring backend — see issue #12 / agy #102.)
         print(f"      [WARNING] Failed to vault session {session_id}: {e}")
         return False
 
