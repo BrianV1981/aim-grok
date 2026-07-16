@@ -105,8 +105,11 @@ def cmd_wiki(args):
     elif args.wiki_command == "bootstrap":
         from wiki_compiler import bootstrap_wiki
         bootstrap_wiki(include_history=True, history_limit=15)
+    elif args.wiki_command in ("schema-upgrade", "schema_upgrade"):
+        from wiki_compiler import upgrade_wiki_schema
+        print(upgrade_wiki_schema())
     else:
-        print("Usage: aim wiki {search|process|bootstrap}")
+        print("Usage: aim wiki {search|process|bootstrap|schema-upgrade}")
 
 def cmd_map(args):
     """Prints the surgical Index of Keys."""
@@ -955,8 +958,12 @@ def main():
         wiki_bootstrap = wiki_subparsers.add_parser(
             "bootstrap", help="Seed + compile wiki deterministically (aim-grok)"
         )
-        wiki_process = wiki_subparsers.add_parser(
+        wiki_subparsers.add_parser(
             "process", help="Process the memory-wiki/_ingest folder"
+        )
+        wiki_subparsers.add_parser(
+            "schema-upgrade",
+            help="Install packaged memory-wiki/AGENTS.md schema (Schema-Version 2+)",
         )
 
     subparsers.add_parser("map", help="Print the Index of Keys (Knowledge Map)")
