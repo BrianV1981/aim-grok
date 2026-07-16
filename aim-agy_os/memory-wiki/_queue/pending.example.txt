@@ -1,0 +1,2 @@
+# path relative to vessel root or under archive/history/
+# aim-agy_os/archive/history/2026-07-15_golden_wiki-schema-v2.md golden-wiki-schema-v2
