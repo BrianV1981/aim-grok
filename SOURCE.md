@@ -3,7 +3,8 @@
 | Field | Value |
 |-------|--------|
 | Upstream | https://github.com/BrianV1981/aim-agy |
-| Commit | `5ec44920f92030266699d1adbb741d3a1a1ffdd2` (`5ec4492`) |
-| Note | Stage 0 multi-page + wiki_serial_ingest; golden run on aim-grok. |
-| Sync date | 2026-07-15 |
-| Phase | LLM Wiki Phase 2-4 continue after schema v2 |
+| Commit | `35ff75670c4902a11ba697e84b5e04192704c5be` (`35ff756`) |
+| Previous | `5ec4492` (Stage 0 multi-page) |
+| Note | Reincarnate hygiene Lane 1 lockstep (single wiki spawn, status pulse path, vault WARNING). Soul PR #104. |
+| Sync date | 2026-07-16 |
+| Phase | Reincarnate process hygiene fleet sync |
