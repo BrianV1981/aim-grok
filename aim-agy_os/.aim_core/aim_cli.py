@@ -497,6 +497,8 @@ def cmd_reincarnate(args):
     sid = getattr(args, "session_id", None)
     if sid:
         rein_args += ["--session-id", sid]
+    if getattr(args, "no_teleport", False):
+        rein_args += ["--no-teleport"]
     run_script(os.path.join(AIM_CORE_DIR, "aim_reincarnate.py"), rein_args)
 
 
@@ -965,6 +967,11 @@ def main():
         type=str,
         default=None,
         help="Explicit Grok/AGY conversation UUID for pulse extraction",
+    )
+    rein_parser.add_argument(
+        "--no-teleport",
+        action="store_true",
+        help="Pulse + vault + wake prompt only; skip tmux spawn/teleport (E2E/CI safe)",
     )
     
     delegate_parser = subparsers.add_parser("delegate", help="Spawn parallel sub-agents to analyze multiple files (The RLM Pattern)")
