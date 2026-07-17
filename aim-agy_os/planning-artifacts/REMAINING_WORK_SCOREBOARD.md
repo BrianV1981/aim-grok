@@ -63,3 +63,13 @@ Docs: `docs/BLACKBOX_VAULT.md`
 | Serial Stage 0 golden reverify | **PASS** |
 | Stage 1 agent polish | still optional P1 |
 | Full teleport tmux E2E | still open (non-blocking for wiki bar) |
+
+## Update 2026-07-17 (live teleport)
+
+| Item | Status |
+|------|--------|
+| Live teleport E2E grok / agy / opencode | **PASS** — FLEET_TELEPORT_E2E_20260717.md |
+| CLI --session-id / --no-teleport on agy+oc | **FIXED** |
+| Codex live teleport | deferred (token budget); CLI+harness wired |
+| Stage 1 agent polish | still optional P1 |
+
