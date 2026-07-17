@@ -48,7 +48,7 @@ Examples:
 ## Reincarnation
 When context is heavy: write gameplan per `aim-agy_os/aim-agy_os_docs/GAMEPLAN_SOP.md`, then use reincarnation / pulse tools.
 
-**Fleet orchestration (3 vessels):** If you are the orchestrator coordinating aim-agy / aim-grok / aim-opencode, read `scripts/FLEET_ORCHESTRATION.md` before multi-agent dispatch. Lockstep policy: `scripts/VESSEL_LOCKSTEP.md`.
+**Fleet orchestration (4 vessels):** If you are the orchestrator coordinating aim-agy / aim-grok / aim-opencode / **aim-codex**, read `scripts/FLEET_ORCHESTRATION.md` before multi-agent dispatch. Lockstep policy: `scripts/VESSEL_LOCKSTEP.md`.
 
 **Transcripts (Phase 1):** Grok stores history at  
 `~/.grok/sessions/<urlencode(cwd)>/<session_id>/chat_history.jsonl`  
