@@ -328,10 +328,16 @@ def main(argv: list[str] | None = None) -> int:
         help="aim-opencode vessel root",
     )
     parser.add_argument(
+        "--codex",
+        type=Path,
+        default=DEFAULTS["codex"],
+        help="aim-codex vessel root",
+    )
+    parser.add_argument(
         "--pair",
         action="append",
         default=[],
-        help="Limit pairs, e.g. agy,grok or agy,opencode (repeatable). Default: all pairs.",
+        help="Limit pairs, e.g. agy,grok or agy,codex (repeatable). Default: all pairs.",
     )
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument(
@@ -355,6 +361,7 @@ def main(argv: list[str] | None = None) -> int:
         "agy": args.agy.expanduser().resolve(),
         "grok": args.grok.expanduser().resolve(),
         "opencode": args.opencode.expanduser().resolve(),
+        "codex": args.codex.expanduser().resolve(),
     }
 
     vessels_info = {}
@@ -375,7 +382,14 @@ def main(argv: list[str] | None = None) -> int:
     if not any(v["exists"] for v in vessels_info.values()):
         return 2
 
-    default_pairs = [("agy", "grok"), ("agy", "opencode"), ("grok", "opencode")]
+    default_pairs = [
+        ("agy", "grok"),
+        ("agy", "opencode"),
+        ("agy", "codex"),
+        ("grok", "opencode"),
+        ("grok", "codex"),
+        ("opencode", "codex"),
+    ]
     pairs_req: list[tuple[str, str]] = []
     if args.pair:
         for spec in args.pair:
