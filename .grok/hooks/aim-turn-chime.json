@@ -1,0 +1,27 @@
+{
+  "description": "A.I.M. turn-done chime (project) — agent turn end / error",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.aim/bin/aim_turn_chime.sh\" stop",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.aim/bin/aim_turn_chime.sh\" stop_failure",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
