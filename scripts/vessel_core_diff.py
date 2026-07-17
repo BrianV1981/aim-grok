@@ -37,6 +37,7 @@ DEFAULTS = {
     "opencode": Path(
         os.environ.get("AIM_OPENCODE_ROOT", "/home/kingb/aim-opencode")
     ),
+    "codex": Path(os.environ.get("AIM_CODEX_ROOT", "/home/kingb/aim-codex")),
 }
 
 # Relative path from vessel root → engine core
@@ -45,6 +46,7 @@ CORE_REL = {
     "agy": Path("aim-agy_os/.aim_core"),
     "grok": Path("aim-agy_os/.aim_core"),
     "opencode": Path("aim_core"),  # migrate → aim-agy_os/.aim_core
+    "codex": Path("aim-agy_os/.aim_core"),
 }
 
 
@@ -81,6 +83,13 @@ KNOWN_OVERLAYS = {
         "session_bridge.py",
         "aim_opencode_update.py",
         "forensic_utils.py",  # may exist elsewhere under plugins on agy
+    },
+    "codex": {
+        "vessel_paths.py",
+        "extract_signal.py",
+        "handoff_pulse_generator.py",
+        "session_naming.py",
+        "reincarnation/teleport_engine.py",
     },
     "agy": set(),
 }
