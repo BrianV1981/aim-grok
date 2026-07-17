@@ -168,7 +168,7 @@ def verify_manifest(session_id: str, *, vessel_root: str, live_path: str | None)
 - [x] Manifest includes sha256; `verify` can detect if live log diverged after seal  
 - [x] `archive/.raw_jsonl_blackbox/` gitignored  
 - [x] CONFIG flags documented  
-- [ ] Same contract behavior on **grok / agy / opencode / codex** (paths vessel-native) — fleet port after aim-grok land
+- [x] Same contract behavior on **grok / agy / opencode / codex** (paths vessel-native) — landed: grok PR #21, agy #107, opencode #27, codex #8
 
 ---
 
