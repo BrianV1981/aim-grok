@@ -1,4 +1,4 @@
-# Vessel lockstep (agy · grok · opencode)
+# Vessel lockstep (agy · grok · opencode · codex)
 
 **Orchestration (how to run multi-vessel work):** see `scripts/FLEET_ORCHESTRATION.md` — triage → dispatch → audit → merge → pin-sync, plus FROM/REPLY_TO tmux contract and surgical vs full sync.
 
@@ -9,8 +9,9 @@
 | Shared engine | **aim-agy** | Implement host-agnostic fixes here first |
 | Grok overlays | **aim-grok** | See `SYNC_FROM_AIM_AGY.md` denylist |
 | OpenCode host | **aim-opencode** | Port from agy; keep OpenCode-only modules local |
+| Codex host | **aim-codex** | Nested soul; Codex overlays in `vessel_paths` / extract / teleport; pin `SOURCE.md` |
 
-**Layout goal (Operator 2026-07-12):** all vessels use **nested** `aim-agy_os/` (same shape as agy/grok). Identical soul tree as far as practical; **harness overlays only** where the CLI differs (spawn binary, transcript paths, skills dir). aim-opencode migrates off flat `aim_core/`.
+**Layout goal (Operator 2026-07-12 + codex 2026-07-17):** all vessels use **nested** `aim-agy_os/` (same shape as agy/grok). Identical soul tree as far as practical; **harness overlays only** where the CLI differs (spawn binary, transcript paths, skills dir). aim-opencode migrates off flat `aim_core/`. aim-codex is greenfield from soul (legacy master is dead).
 
 **Never** open parallel “same feature” PRs on two vessels. File sibling tickets, implement once on soul, sync/port.
 
