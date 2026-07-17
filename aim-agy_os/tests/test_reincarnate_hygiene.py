@@ -109,18 +109,30 @@ def test_cmd_status_falls_back_to_continuity(tmp_path, monkeypatch, capsys):
 def test_vault_session_failure_label_is_warning(capsys, tmp_path, monkeypatch):
     import blackbox_vault
 
-    jsonl = tmp_path / "chat_history.jsonl"
+    # Layout: parent dir is session id (not basename chat_history)
+    sess = tmp_path / "019f-hygiene-vault-test"
+    sess.mkdir()
+    jsonl = sess / "updates.jsonl"
     jsonl.write_bytes(b'{"type":"user"}\n')
-    monkeypatch.setattr(blackbox_vault, "BLACKBOX_DIR", str(tmp_path / "box"))
+    (tmp_path / ".aim_core").mkdir(exist_ok=True)
+    (tmp_path / ".aim_core" / "CONFIG.json").write_text(
+        '{"settings":{"blackbox_enabled":true,"blackbox_key_path":"%s"}}'
+        % (tmp_path / "blackbox.key")
+    )
 
     def boom(*_a, **_k):
         raise RuntimeError("No recommended backend was available")
 
     monkeypatch.setattr(blackbox_vault, "get_or_create_key", boom)
-    ok = blackbox_vault.vault_session(str(jsonl))
+    ok = blackbox_vault.vault_session(
+        str(jsonl),
+        session_id="019f-hygiene-vault-test",
+        vessel_root=str(tmp_path),
+        reason="reincarnate",
+    )
     assert ok is False
     err = capsys.readouterr().out
-    assert "[WARNING]" in err
+    assert "WARN" in err
     assert "[FATAL]" not in err
 
 
@@ -129,4 +141,4 @@ def test_vault_session_source_has_no_fatal_label():
 
     src = inspect.getsource(blackbox_vault.vault_session)
     assert "[FATAL]" not in src
-    assert "[WARNING]" in src
+    assert "WARN" in src
