@@ -17,6 +17,7 @@ aim-grok stands on the shoulders of the wider A.I.M. ecosystem:
 | [aim-agy](https://github.com/BrianV1981/aim-agy) | Flagship engine (memory, GitOps, wiki protocols, installers) |
 | [aim](https://github.com/BrianV1981/aim) | Original Gemini CLI adaptation |
 | [aim-opencode](https://github.com/BrianV1981/aim-opencode) | OpenCode ecosystem adaptation |
+| [aim-codex](https://github.com/BrianV1981/aim-codex) | OpenAI Codex CLI vessel (greenfield nested soul) |
 | Grok CLI (xAI) | Host agent runtime for this vessel |
 
 ## How this vessel was built

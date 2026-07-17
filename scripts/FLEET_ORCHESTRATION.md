@@ -16,7 +16,7 @@
 
 ---
 
-## 1. The three-exoskeleton model
+## 1. The multi-vessel model (soul + peers)
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -44,6 +44,7 @@
 | **Orchestrator** | `aim-grok`, `grok_reincarnate_*`, sometimes `grok-audit` | `/home/kingb/aim-grok` | Triage, write dispatches, audit, pin-sync, Operator interface |
 | **Soul** | `aim-agy` | `/home/kingb/aim-agy` | Host-agnostic engine fixes, GitHub issues on BrianV1981/aim-agy, merge to soul main |
 | **Peer host** | `aim-opencode` | `/home/kingb/aim-opencode` | OpenCode-specific ports; same soul modules when possible |
+| **Peer host** | `aim-codex` | `/home/kingb/aim-codex` | Codex CLI vessel (greenfield nested soul + Codex overlays) |
 
 **Rule of one implementer:** Never open parallel “same feature” PRs on two vessels. Implement **once on soul**, then **port/sync**.
 
