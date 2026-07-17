@@ -51,3 +51,15 @@ Docs: `docs/BLACKBOX_VAULT.md`
 - Bulk scrape all historical sessions into vault  
 - Making vault part of fleet wiki PASS gate  
 - Schema v2 redesign (already shipped)
+
+
+## Update 2026-07-17 (E2E night)
+
+| Item | Status |
+|------|--------|
+| Live reincarnate→wiki E2E (4 vessels) | **PASS** — see FLEET_E2E_STATUS_20260717.md |
+| OpenCode session extract / bridge | **FIXED** (opencode_session) |
+| Blackbox seal fallbacks (AGY/OC/Codex) | **FIXED** |
+| Serial Stage 0 golden reverify | **PASS** |
+| Stage 1 agent polish | still optional P1 |
+| Full teleport tmux E2E | still open (non-blocking for wiki bar) |
