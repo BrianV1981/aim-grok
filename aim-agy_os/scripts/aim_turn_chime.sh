@@ -103,11 +103,9 @@ if [ "$play_ok" -ne 1 ] || [ "${AIM_TURN_CHIME_BELL:-0}" = "1" ]; then
   # Ring BEL on every pane of current tmux session if possible; else stdout
   if [ -n "${TMUX:-}" ] && command -v tmux >/dev/null 2>&1; then
     tmux display-message -d 1 "AIM turn done ($REASON)" 2>/dev/null || true
-    # BEL into this client
-    printf '\a' >/dev/tty 2>/dev/null || printf '\a' || true
-  else
-    printf '\a' >/dev/tty 2>/dev/null || printf '\a' || true
   fi
+  # BEL — never require a real tty (hooks often have no /dev/tty)
+  { printf '\a' >/dev/tty; } 2>/dev/null || { printf '\a'; } 2>/dev/null || true
 fi
 
 # Optional debug log
