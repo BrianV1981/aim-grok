@@ -90,7 +90,15 @@ def store_chunks(
             }
             for r in rows
         ]
-        if table in db.table_names():
+        names = set()
+        try:
+            names = set(db.list_tables())  # type: ignore[attr-defined]
+        except Exception:
+            try:
+                names = set(db.table_names())
+            except Exception:
+                names = set()
+        if table in names:
             tbl = db.open_table(table)
             # delete existing for session if API supports
             try:

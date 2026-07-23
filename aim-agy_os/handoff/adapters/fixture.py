@@ -90,9 +90,14 @@ class FixtureAdapter:
                 continue
             sid = child.name
             meta_cwd = self._meta_cwd(sid)
-            if cwd and meta_cwd and Path(meta_cwd).resolve() != Path(cwd).resolve():
-                # still include if no filter needed for batch; filter optional
-                pass
+            if cwd is not None:
+                if not meta_cwd:
+                    continue
+                try:
+                    if Path(meta_cwd).resolve() != Path(cwd).resolve():
+                        continue
+                except OSError:
+                    continue
             out.append(
                 TranscriptRef(
                     session_id=sid,

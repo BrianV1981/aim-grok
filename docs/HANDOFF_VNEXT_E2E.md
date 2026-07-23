@@ -66,3 +66,13 @@ Default schedule:
 ## Agent rule
 
 Tickets about these pipelines **require** attaching the relevant `*_result.json`. No JSON → invalid ticket.
+
+
+## Full automated suite
+
+```bash
+bash aim-agy_os/scripts/run_handoff_vnext_e2e_suite.sh
+```
+
+Runs: pytest (20 tests) + e2e-staged + 5-day soak + negative resolve.
+Reports under `continuity/cron_state/e2e_suite_*`.
