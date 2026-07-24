@@ -809,53 +809,33 @@ def cmd_uninstall(args):
     print("\n[SUCCESS] A.I.M. removed.")
 
 def cmd_update(args):
-    """Safely pulls the latest A.I.M. core engine files from GitHub into the local isolated project."""
-    print("--- A.I.M. SOVEREIGN ENGINE UPDATE ---")
-    print("[*] Contacting remote Swarm network...")
-    
-    # 1. Clone fresh payload to temp directory
-    temp_dir = os.path.join(OS_DIR, ".aim_temp_update")
-    if os.path.exists(temp_dir):
-        import shutil
-        shutil.rmtree(temp_dir)
-        
-    try:
-        subprocess.run(["git", "clone", "--depth", "1", "https://github.com/BrianV1981/aim-agy.git", temp_dir], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print("    [SUCCESS] Remote payload secured.")
-    except Exception as e:
-        traceback.print_exc()
-        print(f"[ERROR] Failed to connect to Swarm network: {e}")
-        return
+    """Surgical A.I.M. OS engine update (independent of project git remote).
 
-    # 2. Surgically overwrite core logic files (avoiding user data)
-    print("[*] Hot-swapping local execution engine...")
-    import shutil
-    
-    # Source directory in the cloned repository
-    source_os_dir = os.path.join(temp_dir, "aim-agy_os")
-    
-    # Overwrite .aim_core
-    local_core = os.path.join(OS_DIR, ".aim_core")
-    if os.path.exists(local_core): shutil.rmtree(local_core)
-    # Note: the downloaded repo has "aim_core", we rename it to ".aim_core" locally
-    shutil.copytree(os.path.join(source_os_dir, ".aim_core"), local_core)
-    
-    # Overwrite aim-agy_os_docs protocols
-    local_os = os.path.join(OS_DIR, "aim-agy_os_docs")
-    if os.path.exists(local_os): shutil.rmtree(local_os)
-    shutil.copytree(os.path.join(source_os_dir, "aim-agy_os_docs"), local_os)
-    
-    # Overwrite setup scripts
-    shutil.copy2(os.path.join(source_os_dir, "setup.sh"), os.path.join(OS_DIR, "setup.sh"))
-    shutil.copy2(os.path.join(source_os_dir, "requirements.txt"), os.path.join(OS_DIR, "requirements.txt"))
+    Updates only nested aim-agy_os engine files from AIM_ENGINE_URL (default soul
+    aim-agy). Does not touch project app files, memory/wiki/archive, or vessel
+    overlays. Safe when the project origin is severed / points at a client repo.
+    """
+    target = getattr(args, "target", None) or "engine"
+    if target == "project":
+        print("[ERROR] `aim update project` is disabled for safety.")
+        print("        Use your project git remote for app code.")
+        print("        Use `./aim update engine` for surgical A.I.M. OS updates.")
+        sys.exit(2)
 
-    # 3. Rebuild dependencies
-    print("[*] Rebuilding dependencies...")
-    subprocess.run([os.path.join(OS_DIR, "setup.sh")], check=True, cwd=BASE_DIR, stdout=subprocess.DEVNULL)
-    
-    # 4. Clean up
-    shutil.rmtree(temp_dir)
-    print("\\n[SUCCESS] Sovereign Engine Update Complete. You are running the latest A.I.M. OS.")
+    sys.path.insert(0, AIM_CORE_DIR)
+    from aim_engine_update import update_engine
+
+    dry = bool(getattr(args, "dry_run", False))
+    rebuild = bool(getattr(args, "rebuild_deps", False))
+    rec = update_engine(
+        project_root=None,  # discover aim-agy_os from CWD / vessel layout
+        engine_url=getattr(args, "engine_url", None),
+        engine_ref=getattr(args, "engine_ref", None),
+        dry_run=dry,
+        rebuild_deps=rebuild,
+    )
+    if rec.get("status") not in ("ok", "dry_run"):
+        sys.exit(1)
 
 def cmd_import(args):
     """Manually ingests raw JSONL, JSON, or MD files into the Subconscious Swarm."""
@@ -916,8 +896,37 @@ def main():
     subparsers.add_parser("status", help="Show current project momentum")
     subparsers.add_parser("config", aliases=["tui"])
     subparsers.add_parser("core-memory", help="Open the Core Memory block for instant invariant tracking")
-    update_parser = subparsers.add_parser("update", help="Update the A.I.M. engine or the target project")
-    update_parser.add_argument("target", choices=["engine", "project"], nargs="?", default="engine", help="Which component to update")
+    update_parser = subparsers.add_parser(
+        "update",
+        help="Surgical A.I.M. OS engine update (independent of project git remote)",
+    )
+    update_parser.add_argument(
+        "target",
+        choices=["engine", "project"],
+        nargs="?",
+        default="engine",
+        help="engine=update aim-agy_os only; project=disabled",
+    )
+    update_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show rsync plan; do not write files",
+    )
+    update_parser.add_argument(
+        "--rebuild-deps",
+        action="store_true",
+        help="Run setup.sh after engine file update",
+    )
+    update_parser.add_argument(
+        "--engine-url",
+        default=None,
+        help="Override engine git URL (default AIM_ENGINE_URL or aim-agy soul)",
+    )
+    update_parser.add_argument(
+        "--engine-ref",
+        default=None,
+        help="Branch/tag (default AIM_ENGINE_REF or main)",
+    )
     subparsers.add_parser("doctor", help="Run a diagnostic check on system dependencies")
     subparsers.add_parser("health")
     
