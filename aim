@@ -15,5 +15,9 @@ if [[ ! -f "$CLI" ]]; then
   exit 1
 fi
 
+# Pin host family for reincarnate spawn (issue #34) — never fall through to AGY
+export AIM_VESSEL_CLI="${AIM_VESSEL_CLI:-grok}"
+export AIM_HOST="${AIM_HOST:-grok}"
+
 export PYTHONPATH="${OS_ROOT}:${OS_ROOT}/.aim_core${PYTHONPATH:+:$PYTHONPATH}"
 exec "$VENV_PY" "$CLI" "$@"
