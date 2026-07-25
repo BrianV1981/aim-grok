@@ -81,7 +81,12 @@ Successor agent CLI must match the vessel:
 | aim-codex | `codex` (when enabled) |
 
 Handoff / “reincarnate” naming: prefer **handoff** for clarity.  
-**Wiki ingest** is **not** “every session nightly” by default — Operator intent: **opt-in** (handoff / explicit promote). Blackbox backup may differ; wiki is selective.
+
+**Wiki ingest is opt-in via handoff only** (Operator-ratified 2026-07-24).  
+Scratch sessions in a project folder must **not** enter lore. Nightly “vacuum all sessions by cwd” is **rejected** as default product behavior.
+
+Full law + history + re-test matrix: [`HANDOFF_OPT_IN_WIKI_POLICY.md`](./HANDOFF_OPT_IN_WIKI_POLICY.md)  
+Fleet tickets: grok#39 · agy#120 · opencode#37 · codex#18
 
 ---
 
