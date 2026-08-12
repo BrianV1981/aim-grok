@@ -1,234 +1,58 @@
-# aim-grok
+# aim-grok — **deprecated**
 
-**A.I.M. for [Grok CLI](https://x.ai)** — the Grok vessel of [Actual Intelligent Memory](https://github.com/BrianV1981/aim-agy).
+> **This repository is not maintained.**  
+> The Grok CLI vessel is **deprecated in favor of [J.O.S.H.U.A.](https://github.com/BrianV1981/aim-joshua)** — the CLI-agnostic operating system.
+
+Do not clone this repo for new work. Install Joshua, then inject skills from [aim-skill-library](https://github.com/BrianV1981/aim-skill-library) into your Grok host.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/BrianV1981/aim-joshua/main/joshua_os/install.sh | bash
+
+git clone https://github.com/BrianV1981/aim-skill-library.git
+cd aim-skill-library
+./scripts/install.sh --vessel grok --dest ~/.grok/skills --mode symlink
+```
+
+Wiki / onboarding: [aim-joshua/wiki](https://github.com/BrianV1981/aim-joshua/wiki)
+
+---
 
 <!-- AIM_ECOSYSTEM_START -->
 ### 🧬 The A.I.M. Ecosystem
 
-Modular A.I.M. (Actual Intelligent Memory) repositories. **Flagship engine: [aim-agy](https://github.com/BrianV1981/aim-agy).**
+Modular A.I.M. (Actual Intelligent Memory) repositories. While the original architecture relied on separate CLI harnesses, **J.O.S.H.U.A.** is the convergence point that unifies hosts under a single, agnostic operating system.
 
-**Active vessels (CLI hosts):**
-- **[aim-agy](https://github.com/BrianV1981/aim-agy)** — Core engine / *soul* (Antigravity CLI). *Flagship.* Shared nested `aim-agy_os/` ships here first.
-- **[aim-grok](https://github.com/BrianV1981/aim-grok)** — Grok CLI vessel (hybrid memory, GitOps, wiki, fleet orchestration tooling).
-- **[aim-opencode](https://github.com/BrianV1981/aim-opencode)** — OpenCode CLI vessel.
-- **[aim-codex](https://github.com/BrianV1981/aim-codex)** — OpenAI Codex CLI vessel (greenfield nested soul + Codex overlays; primary `main`).
+**Active (CLI host / OS):**
+- **[aim-joshua](https://github.com/BrianV1981/aim-joshua)** — The Universal Operating System. *Use this.*
 
 **Tools & workspaces:**
+- **[aim-tmux-dashboard](https://github.com/BrianV1981/aim-tmux-dashboard)** — Terminal multi-session monitor and daily cockpit (CLI alias: `aim-dash`).
 - **[aim-connect](https://github.com/BrianV1981/aim-connect)** — Self-hosted remote workspace web UI.
-- **[aim-tmux-dashboard](https://github.com/BrianV1981/aim-tmux-dashboard)** — Terminal multi-session monitor.
-- **[aim-browser](https://github.com/BrianV1981/aim-browser)** — Headed Chromium CDP engine + browser **skill suite**.
+- **[aim-skill-library](https://github.com/BrianV1981/aim-skill-library)** — Skills index / multi-CLI install registry. Home of **`aim-communicate`** and **`aim-audit`**.
+- **[aim-browser](https://github.com/BrianV1981/aim-browser)** — Headed Chromium CDP engine + browser skill suite.
 - **[aim-google](https://github.com/BrianV1981/aim-google)** — Google Workspace CLI (Gmail, Drive, Calendar, …).
 - **[aim-flight-recorder](https://github.com/BrianV1981/aim-flight-recorder)** — Forensic Markdown session extractor.
 - **[aim-boardroom](https://github.com/BrianV1981/aim-boardroom)** — Multi-agent orchestration room (OS multiplexing + artifacts).
-- **[aim-skills](https://github.com/BrianV1981/aim-skills)** — **Skills index / multi-CLI install registry** (agy, grok, opencode, codex).
 
 **DNA, comms & lore:**
-- **[aim-coagents](https://github.com/BrianV1981/aim-coagents)** — DNA bank for sovereign co-agent blueprints.
+- **[aim-coagents](https://github.com/BrianV1981/aim-coagents)** — DNA bank for sovereign co-agent blueprints (including **`aim-auditor`**).
 - **[aim-knowledge](https://github.com/BrianV1981/aim-knowledge)** — Public Obsidian vault / deep-lore archive.
-- **[aim-chalkboard](https://github.com/BrianV1981/aim-chalkboard)** — Optional cross-host async git mailbox (PoC; default same-host comms = **aim-communicate** skill).
+- **[aim-chalkboard](https://github.com/BrianV1981/aim-chalkboard)** — Optional cross-host async git mailbox (PoC; default same-host comms = aim-communicate skill).
 
 **Deprecated / not maintained:**
-- **[aim](https://github.com/BrianV1981/aim)** — Original **Gemini CLI** framework. Deprecated after loss of practical subscription access; **Great Migration → aim-agy**.
-- **[aim-swarm](https://github.com/BrianV1981/aim-swarm)** — Legacy Python swarm factory → use **aim-coagents** + aim-agy spawn.
-- **aim-claude / Anthropic-line vessels** — **Done.** Operator does not develop against Anthropic. Use **aim-agy / aim-grok / aim-opencode / aim-codex**.
-
-Full map: see **aim-skills** `docs/AIM_ECOSYSTEM_MAP.md` or Operator artifact `AIM_ECOSYSTEM_MAP.md`.
+- **aim-agy** — Legacy core engine (Antigravity CLI). Deprecated in favor of aim-joshua.
+- **aim-grok** (this repo) — Legacy Grok CLI vessel. Deprecated in favor of aim-joshua.
+- **aim-opencode** — Legacy OpenCode CLI vessel. Deprecated in favor of aim-joshua.
+- **aim-codex** — Legacy OpenAI Codex CLI vessel. Deprecated in favor of aim-joshua.
+- **aim-claude / Anthropic-line vessels** — Done. Operator does not develop against Anthropic.
+- **aim-skills** — Replaced by `aim-skill-library`.
+- **aim** — Original Gemini CLI framework. Deprecated after loss of practical subscription access.
+- **aim-swarm** — Legacy Python swarm factory.
 <!-- AIM_ECOSYSTEM_END -->
 
+---
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v0.2.1-blue.svg)](VERSION)
-[![Status](https://img.shields.io/badge/status-v0%20vessel-green.svg)](#status)
 
-aim-grok wraps the A.I.M. engine around **Grok CLI** so long-running coding agents get:
-
-- **Hybrid RAG memory** (LanceDB + Tantivy FTS + local embeddings)
-- **Persistent memory wiki** (searchable markdown lore under `memory-wiki/`)
-- **GitOps discipline** (`aim bug` → `aim fix` → `aim push`)
-- **Session handoffs** (`aim pulse`) using Grok `chat_history.jsonl`
-- **Project skills** under `.grok/skills/`
-
-Upstream engine source of truth: **[aim-agy](https://github.com/BrianV1981/aim-agy)** (Antigravity flagship).  
-This repo is the **Grok-adapted vessel**: vendored engine + Grok-only overlays.
-
----
-
-## Requirements
-
-| Dependency | Notes |
-|------------|--------|
-| **Linux** or **WSL (Ubuntu)** | Primary target |
-| **Python 3.10+** | 3.12 tested |
-| **Grok CLI** (`grok`) | Authenticated (e.g. SuperGrok) |
-| **Ollama** (recommended) | `nomic-embed-text` for embeddings |
-| **git**, **tmux** | GitOps + optional multi-agent |
-| **gh** (optional) | Issue sync / PR workflows |
-
----
-
-## Quickstart
-
-```bash
-git clone https://github.com/BrianV1981/aim-grok.git
-cd aim-grok
-
-# Build Python backend
-bash aim-agy_os/setup.sh
-
-# Seed live memory from default ROM (once)
-mkdir -p aim-agy_os/memory_lance
-cp -a aim-agy_os/assets/default_lance/. aim-agy_os/memory_lance/
-
-# Health check
-./aim doctor
-./aim map
-
-# Memory wiki (first time)
-./aim wiki bootstrap
-./aim wiki search "vessel"
-
-# Start Grok in this workspace
-grok
-# or: tmux attach -t aim-grok
-```
-
-CLI entrypoint:
-
-```bash
-./aim <command>
-# equivalent to:
-# aim-agy_os/venv/bin/python3 aim-agy_os/.aim_core/aim_cli.py <command>
-```
-
-Optional shell alias:
-
-```bash
-alias aim-grok='NODE_OPTIONS="--max-old-space-size=8192" /path/to/aim-grok/aim-agy_os/venv/bin/python3 /path/to/aim-grok/aim-agy_os/.aim_core/aim_cli.py'
-```
-
----
-
-## Core commands
-
-| Command | Purpose |
-|---------|---------|
-| `./aim doctor` | Environment health (exit `1` on hard errors) |
-| `./aim map` | Knowledge map (Engram index) |
-| `./aim search "<query>"` | Hybrid RAG search |
-| `./aim wiki search "<q>"` | Lexical search over `memory-wiki/` |
-| `./aim wiki process` | Compile `_ingest/` → wiki pages (deterministic) |
-| `./aim wiki bootstrap` | Seed docs + recent history into the wiki |
-| `./aim pulse` | Session handoff / flight recorder from Grok transcripts |
-| `./aim bug` / `fix` / `push` | GitOps issue → worktree → PR |
-
-More: [`TOOLS.md`](TOOLS.md) · [`TOOL_MAP.md`](TOOL_MAP.md) (Grok vs AGY tool surface)
-
----
-
-## Memory wiki
-
-The persistent wiki lives at `aim-agy_os/memory-wiki/`.
-
-```bash
-# Drop notes for processing
-echo "# My note\n\nFacts here..." > aim-agy_os/memory-wiki/_ingest/my-note.md
-./aim wiki process
-
-# Browse
-less aim-agy_os/memory-wiki/index.md
-ls aim-agy_os/memory-wiki/pages/
-```
-
-Default processing is **deterministic** (no second agent required).  
-Optional agent mode: `AIM_WIKI_MODE=agent AIM_WIKI_AGENT=grok ./aim wiki process`
-
-After `./aim pulse`, the summarizer can feed session history into the wiki automatically.
-
----
-
-## Layout
-
-```text
-aim-grok/
-├── aim                 # CLI wrapper
-├── AGENTS.md           # Agent operating rules (Grok vessel)
-├── README.md
-├── CONTRIBUTING.md
-├── CONTRIBUTORS.md
-├── LICENSE
-├── VERSION
-├── SOURCE.md           # Upstream pin (aim-agy commit)
-├── SYNC_FROM_AIM_AGY.md
-├── TOOL_MAP.md
-├── TOOLS.md
-├── .grok/skills/       # Project Grok skills
-├── .github/workflows/  # CI
-├── workspace/          # aim fix worktrees (gitignored content)
-└── aim-agy_os/         # Vendored A.I.M. engine (+ Grok overlays)
-    ├── .aim_core/      # Python engine (CLI, RAG, wiki, reincarnation)
-    ├── assets/         # Default seed ROM
-    ├── memory_lance/   # Live DB (gitignored)
-    ├── memory-wiki/    # Persistent markdown wiki
-    ├── hooks/          # Background summarizer, etc.
-    └── tests/
-```
-
-The directory name `aim-agy_os` is kept for path compatibility with the upstream engine. Product name and entrypoint are **aim-grok**.
-
----
-
-## Status (v0.2.1)
-
-| Area | State |
-|------|--------|
-| Engine bootstrap + venv | Done |
-| Grok session paths (`vessel_paths`) | Done |
-| Hybrid search + doctor | Done |
-| Memory wiki (deterministic) | Done |
-| Upstream sync from aim-agy P2 | Done (`947c538`) |
-| Full reincarnate teleport UX | Partial |
-| Multi-host install polish | Evolving (v0) |
-
-This is a **v0 vessel**: usable for daily Grok + A.I.M. workflows; APIs and layout may still shift.
-
----
-
-## Relation to aim-agy and the fleet
-
-| Repo | Role |
-|------|------|
-| [**aim-agy**](https://github.com/BrianV1981/aim-agy) | Flagship A.I.M. engine / soul (Antigravity CLI) |
-| **aim-grok** (this repo) | Grok CLI vessel + overlays + fleet orchestration tooling |
-| [**aim-opencode**](https://github.com/BrianV1981/aim-opencode) | OpenCode CLI vessel |
-| [**aim-codex**](https://github.com/BrianV1981/aim-codex) | OpenAI Codex CLI vessel |
-
-Sync procedure: [`SYNC_FROM_AIM_AGY.md`](SYNC_FROM_AIM_AGY.md)  
-Upstream pin: [`SOURCE.md`](SOURCE.md)  
-Fleet lockstep: [`scripts/VESSEL_LOCKSTEP.md`](scripts/VESSEL_LOCKSTEP.md) · [`scripts/FLEET_ORCHESTRATION.md`](scripts/FLEET_ORCHESTRATION.md)
-
----
-
-## Contributing
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
-
-Surgical commits, GitOps branches, and tests preferred. Do not commit `venv/`, live `memory_lance/`, or secrets.
-
----
-
-## Security
-
-See [`SECURITY.md`](SECURITY.md). Never commit API keys or `.aim_core/CONFIG.json`.
-
----
-
-## License
-
-[MIT](LICENSE) — Copyright (c) 2026 Brian Vasquez
-
----
-
-## Support
-
-- Issues: use GitHub Issues on this repo  
-- Upstream engine issues: [aim-agy](https://github.com/BrianV1981/aim-agy/issues)  
-- Coffee: [buymeacoffee.com/brianv1981](https://buymeacoffee.com/brianv1981)
+[MIT](LICENSE) — Copyright (c) 2026 Brian Vasquez  
+☕ **Support:** [Buy Me a Coffee](https://buymeacoffee.com/brianv1981)
