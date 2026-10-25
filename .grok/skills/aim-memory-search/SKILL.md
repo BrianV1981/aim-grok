@@ -7,7 +7,7 @@ description: >
 
 # aim-memory-search (aim-grok)
 
-From the project root `/home/kingb/aim-grok`:
+From the project root `~/aim-grok`:
 
 ```bash
 ./aim map

@@ -6,7 +6,7 @@
 - Canonical Soul Sync Pin: `be101453b659c61a74789d54d15b8e9091ccc374` (Fix: Correct install-core.sh alias paths).
 
 3. CANONICAL NAMING SUMMARY
-- Saved to: `/home/kingb/aim-agy/aim-agy_os/planning-artifacts/CANONICAL_SESSION_NAMING.md`
+- Saved to: `~/aim-agy/aim-agy_os/planning-artifacts/CANONICAL_SESSION_NAMING.md`
 
 4. NOTES
 - There is local dirt on `main` in the aim-agy vessel that should NOT be pinned or synced:

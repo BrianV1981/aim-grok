@@ -4,7 +4,7 @@
 
 # PHASE0_COMPLETE
 
-*Seeded from `/home/kingb/aim-grok/aim-agy_os/planning-artifacts/PHASE0_COMPLETE.md`*
+*Seeded from `~/aim-grok/aim-agy_os/planning-artifacts/PHASE0_COMPLETE.md`*
 
 # Phase 0 complete — aim-grok scaffold
 
@@ -13,7 +13,7 @@
 **Upstream pin:** aim-agy `d07e41b`
 
 ## Delivered
-- Git repo at `/home/kingb/aim-grok`
+- Git repo at `~/aim-grok`
 - Vendored engine under `aim-agy_os/` (path name kept for compat)
 - `venv` via `setup.sh`
 - Seeded `memory_lance` from `assets/default_lance`

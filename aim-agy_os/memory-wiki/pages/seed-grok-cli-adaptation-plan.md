@@ -4,12 +4,12 @@
 
 # GROK_CLI_ADAPTATION_PLAN
 
-*Seeded from `/home/kingb/aim-grok/aim-agy_os/planning-artifacts/GROK_CLI_ADAPTATION_PLAN.md`*
+*Seeded from `~/aim-grok/aim-agy_os/planning-artifacts/GROK_CLI_ADAPTATION_PLAN.md`*
 
 # aim-agy → aim-grok (Grok CLI) adaptation plan
 
 **Status:** aim-agy main is cleaned and merge-complete after P0/P1 (2026-07-11).  
-**Goal:** Port / adapt the A.I.M. exoskeleton so **Grok CLI** in `/home/kingb/aim-grok` can run as a first-class vessel (parallel to Antigravity/`agy`).
+**Goal:** Port / adapt the A.I.M. exoskeleton so **Grok CLI** in `~/aim-grok` can run as a first-class vessel (parallel to Antigravity/`agy`).
 
 ## Baseline (aim-agy main @ post-merge)
 
@@ -43,7 +43,7 @@ Verified on operator host after squash-merge of PRs #73–#79:
 ## Recommended approach (phased)
 
 ### Phase 0 — Workspace bootstrap (aim-grok)
-1. Initialize git repo in `/home/kingb/aim-grok` if empty.
+1. Initialize git repo in `~/aim-grok` if empty.
 2. Either:
    - **A (recommended):** Vendor a thin copy of `aim-agy_os` as `aim-grok_os` with Grok-specific overrides, or  
    - **B:** Git submodule / sparse checkout of `BrianV1981/aim-agy` + overlay.
@@ -66,7 +66,7 @@ Promote project-scoped copies into `aim-grok/.grok/skills/` for the team.
 
 ### Phase 3 — CLI entrypoint
 - Shell alias: `aim-grok` → `venv/bin/python aim-agy_os/.aim_core/aim_cli.py` (or forked tree).
-- Fix `config_utils` / `find_project_root` for Grok cwd (`/home/kingb/aim-grok`).
+- Fix `config_utils` / `find_project_root` for Grok cwd (`~/aim-grok`).
 - `tmp_chats_dir` currently points at Antigravity brain; add Grok session path (`~/.grok/sessions/...`).
 
 ### Phase 4 — Reincarnation & handoffs

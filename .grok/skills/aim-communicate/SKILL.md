@@ -42,7 +42,7 @@ Put shared state where the target project already looks for artifacts (prefer un
 
 ```bash
 # Example for aim-agy
-DISPATCH="/home/kingb/aim-grok/aim-agy_os/planning-artifacts/DISPATCH_FROM_AIM_GROK.md"
+DISPATCH="~/aim-grok/aim-agy_os/planning-artifacts/DISPATCH_FROM_AIM_GROK.md"
 # write full instructions with cat/heredoc to $DISPATCH
 ```
 
@@ -133,9 +133,9 @@ Do not paste entire files or audits over tmux. Write to a path, then point:
 
 | Session | Typical agent | Typical cwd |
 |---------|---------------|-------------|
-| `aim-agy` | Antigravity (`agy`) | `/home/kingb/aim-agy` |
-| `aim-grok` | Grok CLI (`grok`) | `/home/kingb/aim-grok` |
-| `aim-connect` | `agy` | `/home/kingb/aim-connect` |
+| `aim-agy` | Antigravity (`agy`) | `~/aim-agy` |
+| `aim-grok` | Grok CLI (`grok`) | `~/aim-grok` |
+| `aim-connect` | `agy` | `~/aim-connect` |
 
 Re-check with `tmux list-sessions` — names can change.
 

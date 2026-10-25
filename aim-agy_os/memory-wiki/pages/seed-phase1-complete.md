@@ -4,12 +4,12 @@
 
 # PHASE1_COMPLETE
 
-*Seeded from `/home/kingb/aim-grok/aim-agy_os/planning-artifacts/PHASE1_COMPLETE.md`*
+*Seeded from `~/aim-grok/aim-agy_os/planning-artifacts/PHASE1_COMPLETE.md`*
 
 # Phase 1 complete — Grok tool surface & sessions
 
 **Date:** 2026-07-11  
-**Vessel:** `/home/kingb/aim-grok`
+**Vessel:** `~/aim-grok`
 
 ## Delivered
 

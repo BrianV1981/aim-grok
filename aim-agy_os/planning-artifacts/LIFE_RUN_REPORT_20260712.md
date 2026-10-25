@@ -1,7 +1,7 @@
 # Life Run Report
 
 - **When:** 2026-07-12T02:38:58-04:00
-- **Test dir:** `/home/kingb/test_aim_grok_life/20260712_023745`
+- **Test dir:** `~/test_aim_grok_life/20260712_023745`
 - **Session ID:** `019f542b-7e52-71c1-95c1-50d1c5e5ccea`
 - **Reincarnation tmux:** `aim_reincarnation_1783838300`
 - **PASS:** 9
@@ -16,7 +16,7 @@
 ## Cleanup
 ```bash
 tmux kill-session -t aim_reincarnation_1783838300 2>/dev/null || true
-# optional: rm -rf /home/kingb/test_aim_grok_life/20260712_023745
+# optional: rm -rf ~/test_aim_grok_life/20260712_023745
 ```
 
 ## Orchestrator verification
@@ -35,7 +35,7 @@ tmux kill-session -t aim_reincarnation_1783838300 2>/dev/null || true
 New vessel was observed running Grok and executing handoff steps (read AGENTS.md, doctor, wiki search).
 
 ### Artifacts
-- Test vessel: `/home/kingb/test_aim_grok_life/20260712_023745/vessel`
+- Test vessel: `~/test_aim_grok_life/20260712_023745/vessel`
 - Log: `.../life_run.log`
 - Tmux: `tmux attach -t aim_reincarnation_1783838300` (kill when done)
 

@@ -36,7 +36,7 @@ Multi-page graph (not a single dump):
 ## How to reproduce
 
 ```bash
-cd /home/kingb/aim-grok
+cd ~/aim-grok
 ./aim-agy_os/scripts/wiki_serial_ingest.sh \
   --archive aim-agy_os/archive/history/2026-07-15_golden_wiki-schema-v2.md \
   --source-id golden-wiki-schema-v2

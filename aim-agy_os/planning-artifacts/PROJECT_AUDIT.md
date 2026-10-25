@@ -1,7 +1,7 @@
 # Project Audit: `aim-agy` (A.I.M. / Antigravity)
 
 **Date:** 2026-07-11  
-**Path:** `/home/kingb/aim-agy`  
+**Path:** `~/aim-agy`  
 **Remote:** `https://github.com/BrianV1981/aim-agy`  
 **Branch:** `main` @ `0723703` (v1.0.7)  
 **Working tree:** clean (untracked: `patch.diff` only)

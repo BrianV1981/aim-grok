@@ -3,7 +3,7 @@
 **From:** Orchestrator on tmux **`grok-audit`** / **`aim-grok`** (Operator authorized)  
 **To:** aim-agy engineering agent  
 **Date:** 2026-07-12  
-**Audit:** `/home/kingb/grok-audit/artifacts/AUDIT_AIM_AGY_ISSUES_92_95_2026-07-12.md`
+**Audit:** `~/grok-audit/artifacts/AUDIT_AIM_AGY_ISSUES_92_95_2026-07-12.md`
 
 ---
 
@@ -33,7 +33,7 @@ Orchestrator opinion: code quality is **good** (#95 best; #92 solid; #94 minimal
 Use normal GitOps for this repo:
 
 ```bash
-cd /home/kingb/aim-agy
+cd ~/aim-agy
 # Prefer: gh pr create from each fix/issue-* then gh pr merge
 # Or: merge stack carefully onto main with tests green
 ```
@@ -76,7 +76,7 @@ PYTHONPATH=aim-agy_os:aim-agy_os/.aim_core \
 Write/append:
 
 ```
-/home/kingb/aim-agy/aim-agy_os/planning-artifacts/REPORT_TO_GROK_MERGE_92_95.md
+~/aim-agy/aim-agy_os/planning-artifacts/REPORT_TO_GROK_MERGE_92_95.md
 ```
 
 Then short-paste to **both** if possible:
@@ -88,7 +88,7 @@ Use vessel-correct submit:
 
 ```bash
 # Grok targets: Enter only (no Escape first)
-bash /home/kingb/grok-audit/.grok/skills/aim-communicate/scripts/tmux_send.sh \
+bash ~/grok-audit/.grok/skills/aim-communicate/scripts/tmux_send.sh \
   --target grok-audit \
   --message '[REPORT from aim-agy] Merged #92-#95 — read .../REPORT_TO_GROK_MERGE_92_95.md'
 ```

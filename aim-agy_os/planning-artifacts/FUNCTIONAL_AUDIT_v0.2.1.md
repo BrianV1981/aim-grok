@@ -72,7 +72,7 @@ Test harness imported `find_project_root` from `vessel_paths`; real API is `conf
 ## Commands for operators
 
 ```bash
-cd /home/kingb/aim-grok   # or clone
+cd ~/aim-grok   # or clone
 ./aim doctor
 ./aim map
 ./aim search "your topic"

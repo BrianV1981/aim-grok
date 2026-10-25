@@ -4,7 +4,7 @@
 
 # PHASE2_PROGRESS
 
-*Seeded from `/home/kingb/aim-grok/aim-agy_os/planning-artifacts/PHASE2_PROGRESS.md`*
+*Seeded from `~/aim-grok/aim-agy_os/planning-artifacts/PHASE2_PROGRESS.md`*
 
 # Phase 2 progress — pulse E2E + root fix
 
@@ -23,7 +23,7 @@
 
 ## Validated
 ```
-find_project_root from vessel/engine/.aim_core → /home/kingb/aim-grok
+find_project_root from vessel/engine/.aim_core → ~/aim-grok
 ./aim pulse → exit 0, HANDOFF READY
 ```
 

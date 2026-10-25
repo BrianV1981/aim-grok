@@ -7,7 +7,7 @@ description: >
 # aim-list-sessions (aim-grok)
 
 ```bash
-cd /home/kingb/aim-grok
+cd ~/aim-grok
 ./aim map
 ./aim doctor
 ```

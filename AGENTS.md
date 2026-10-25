@@ -60,4 +60,4 @@ See `TOOL_MAP.md`. Upstream sync: `SYNC_FROM_AIM_AGY.md`.
 ## Workspace isolation
 - Engine and memory under `aim-agy_os/`.
 - Worktrees under `workspace/`.
-- Do not modify `/home/kingb/aim-agy` unless Operator explicitly scopes that repo.
+- Do not modify `~/aim-agy` unless Operator explicitly scopes that repo.

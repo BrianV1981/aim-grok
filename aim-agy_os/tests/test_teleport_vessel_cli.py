@@ -20,9 +20,9 @@ class TestGrokSpawnNeverAgy(unittest.TestCase):
     def test_aim_grok_path(self):
         os.environ.pop("AIM_VESSEL_CLI", None)
         os.environ.pop("AIM_HOST", None)
-        kind = detect_vessel_kind("/home/kingb/aim-grok")
+        kind = detect_vessel_kind("~/aim-grok")
         self.assertEqual(kind, "grok")
-        cli = _resolve_vessel_cli("/home/kingb/aim-grok")
+        cli = _resolve_vessel_cli("~/aim-grok")
         self.assertIn("grok", cli[0])
         self.assertNotIn("agy", os.path.basename(cli[0]))
         self.assertIn("--always-approve", cli)
@@ -32,9 +32,9 @@ class TestGrokSpawnNeverAgy(unittest.TestCase):
         os.environ.pop("AIM_VESSEL_CLI", None)
         os.environ.pop("AIM_HOST", None)
         with mock.patch("shutil.which", side_effect=lambda b: f"/bin/{b}"):
-            kind = detect_vessel_kind("/home/kingb/grok-audit")
+            kind = detect_vessel_kind("~/grok-audit")
             self.assertEqual(kind, "grok")
-            cli = _resolve_vessel_cli("/home/kingb/grok-audit")
+            cli = _resolve_vessel_cli("~/grok-audit")
             self.assertTrue(cli[0].endswith("grok") or "grok" in cli[0])
             self.assertIn("--always-approve", cli)
             self.assertNotIn("--dangerously-skip-permissions", cli)
@@ -60,7 +60,7 @@ class TestGrokSpawnNeverAgy(unittest.TestCase):
         os.environ["AIM_VESSEL_CLI"] = "agy"
         try:
             with mock.patch("shutil.which", side_effect=lambda b: f"/bin/{b}"):
-                cli = _resolve_vessel_cli("/home/kingb/aim-grok")
+                cli = _resolve_vessel_cli("~/aim-grok")
                 self.assertIn("agy", cli[0])
                 self.assertIn("--dangerously-skip-permissions", cli)
         finally:

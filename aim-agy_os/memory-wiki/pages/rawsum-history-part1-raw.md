@@ -73,7 +73,7 @@ Source: `history_part1_raw.md`
 # A.I.M. Signal Skeleton
 ## 👤 USER (Unknown)
 As you answer the user's questions, you can use the following context (ordered from repo root to current directory - deeper files take precedence on conflicts):
-## From: /home/kingb/aim-grok/AGENTS.md
+## From: ~/aim-grok/AGENTS.md
 # A.I.M. @ aim-grok — Grok CLI vessel
 ## Identity
 - **Designation:** A.I.M. (aim-grok vessel)
@@ -100,7 +100,7 @@ As you answer the user's questions, you can use the following context (ordered f
 ## Workspace isolation
 - Engine and memory under `aim-agy_os/`.
 - Worktrees under `workspace/`.
-- Do not modify `/home/kingb/aim-agy` unless Operator explicitly scopes that repo.
+- Do not modify `~/aim-agy` unless Operator explicitly scopes that repo.
 ## 👤 USER (Unknown)
 <user_info>
 </user_info>

@@ -2,8 +2,8 @@
 # Full life-cycle test: headless install → live use → reincarnate → wiki verify
 set -euo pipefail
 
-ROOT_SRC="${AIM_GROK_SRC:-/home/kingb/aim-grok}"
-TEST_ROOT="${AIM_LIFE_ROOT:-/home/kingb/test_aim_grok_life}"
+ROOT_SRC="${AIM_GROK_SRC:-~/aim-grok}"
+TEST_ROOT="${AIM_LIFE_ROOT:-~/test_aim_grok_life}"
 STAMP=$(date +%Y%m%d_%H%M%S)
 TEST_DIR="${TEST_ROOT}/${STAMP}"
 REPORT="${TEST_DIR}/LIFE_RUN_REPORT.md"

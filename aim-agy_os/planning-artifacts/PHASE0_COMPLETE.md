@@ -5,7 +5,7 @@
 **Upstream pin:** aim-agy `d07e41b`
 
 ## Delivered
-- Git repo at `/home/kingb/aim-grok`
+- Git repo at `~/aim-grok`
 - Vendored engine under `aim-agy_os/` (path name kept for compat)
 - `venv` via `setup.sh`
 - Seeded `memory_lance` from `assets/default_lance`

@@ -8,7 +8,7 @@ description: >
 # aim-wiki (aim-grok)
 
 ```bash
-cd /home/kingb/aim-grok   # or your clone path
+cd ~/aim-grok   # or your clone path
 ./aim wiki search "<query>"
 ./aim wiki process          # compile _ingest/ → pages/ (deterministic)
 ./aim wiki bootstrap        # seed docs + session history into wiki

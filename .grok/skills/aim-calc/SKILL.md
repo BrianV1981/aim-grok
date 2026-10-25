@@ -7,7 +7,7 @@ description: >
 # aim-calc
 
 ```bash
-python3 /home/kingb/aim-grok/.grok/skills/aim-calc/scripts/aim_calc.py "<expression>"
+python3 ~/aim-grok/.grok/skills/aim-calc/scripts/aim_calc.py "<expression>"
 ```
 
 State lives next to the script. Optional: `pip install pint` for units (`u`).

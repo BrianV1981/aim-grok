@@ -4,7 +4,7 @@
 
 # SYNC_FROM_AIM_AGY
 
-*Seeded from `/home/kingb/aim-grok/SYNC_FROM_AIM_AGY.md`*
+*Seeded from `~/aim-grok/SYNC_FROM_AIM_AGY.md`*
 
 # Syncing engine code from aim-agy → aim-grok
 
@@ -24,8 +24,8 @@ aim-agy remains the **upstream** for Antigravity + shared engine. aim-grok **ven
 ## Safe rsync (engine only)
 
 ```bash
-AGY=/home/kingb/aim-agy
-GROK=/home/kingb/aim-grok
+AGY=~/aim-agy
+GROK=~/aim-grok
 
 # Dry-run first
 rsync -anc --delete \

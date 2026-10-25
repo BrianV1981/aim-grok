@@ -4,7 +4,7 @@
 
 # TOOL_MAP
 
-*Seeded from `/home/kingb/aim-grok/TOOL_MAP.md`*
+*Seeded from `~/aim-grok/TOOL_MAP.md`*
 
 # Tool surface map — A.I.M. / AGY → Grok CLI (aim-grok)
 

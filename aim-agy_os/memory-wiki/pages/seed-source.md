@@ -4,7 +4,7 @@
 
 # SOURCE
 
-*Seeded from `/home/kingb/aim-grok/SOURCE.md`*
+*Seeded from `~/aim-grok/SOURCE.md`*
 
 # Upstream source pin
 

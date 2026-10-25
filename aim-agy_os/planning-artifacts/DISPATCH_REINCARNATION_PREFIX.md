@@ -35,7 +35,7 @@
 
 - Work via GitOps: `./aim fix 93` or equivalent branch/worktree — **not** commit directly to `main` without Operator.
 - No force-push, no prune-remote --confirm, no destructive host cleanup.
-- Do not modify `/home/kingb/aim-grok` unless absolutely needed for reference only (read-only OK).
+- Do not modify `~/aim-grok` unless absolutely needed for reference only (read-only OK).
 - Sibling tickets for awareness (do not implement them): aim-grok #1 / PR #2 (`grok_reincarnation_*`); aim-opencode #9 (`opencode_reincarnation_*`).
 
 ---
@@ -43,7 +43,7 @@
 ## Required reply structure (one structured reply; no open-ended chat loop)
 
 Write a short status into:
-`/home/kingb/aim-agy/aim-agy_os/planning-artifacts/REPLY_REINCARNATION_PREFIX.md`
+`~/aim-agy/aim-agy_os/planning-artifacts/REPLY_REINCARNATION_PREFIX.md`
 
 And/or paste a brief structured block into your pane for Operator capture:
 

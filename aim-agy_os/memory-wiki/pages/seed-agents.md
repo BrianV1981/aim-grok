@@ -4,7 +4,7 @@
 
 # AGENTS
 
-*Seeded from `/home/kingb/aim-grok/AGENTS.md`*
+*Seeded from `~/aim-grok/AGENTS.md`*
 
 # A.I.M. @ aim-grok — Grok CLI vessel
 
@@ -65,7 +65,7 @@ See `TOOL_MAP.md`. Upstream sync: `SYNC_FROM_AIM_AGY.md`.
 ## Workspace isolation
 - Engine and memory under `aim-agy_os/`.
 - Worktrees under `workspace/`.
-- Do not modify `/home/kingb/aim-agy` unless Operator explicitly scopes that repo.
+- Do not modify `~/aim-agy` unless Operator explicitly scopes that repo.
 
 ---
 [← Wiki index](../index.md)

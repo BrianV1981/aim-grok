@@ -4,7 +4,7 @@
 
 # README
 
-*Seeded from `/home/kingb/aim-grok/README.md`*
+*Seeded from `~/aim-grok/README.md`*
 
 # aim-grok
 
@@ -43,7 +43,7 @@ The folder is still named `aim-agy_os` so `config_utils.OS_ROOT` and installers 
 ## Quickstart
 
 ```bash
-cd /home/kingb/aim-grok
+cd ~/aim-grok
 
 # already run in Phase 0 — recreate if needed:
 # bash aim-agy_os/setup.sh
@@ -61,7 +61,7 @@ aim-agy_os/venv/bin/python3 aim-agy_os/.aim_core/aim_cli.py doctor
 Optional shell alias:
 
 ```bash
-alias aim-grok='NODE_OPTIONS="--max-old-space-size=8192" /home/kingb/aim-grok/aim-agy_os/venv/bin/python3 /home/kingb/aim-grok/aim-agy_os/.aim_core/aim_cli.py'
+alias aim-grok='NODE_OPTIONS="--max-old-space-size=8192" ~/aim-grok/aim-agy_os/venv/bin/python3 ~/aim-grok/aim-agy_os/.aim_core/aim_cli.py'
 ```
 
 ## Grok session
@@ -69,7 +69,7 @@ alias aim-grok='NODE_OPTIONS="--max-old-space-size=8192" /home/kingb/aim-grok/ai
 Start Grok with this workspace as cwd:
 
 ```bash
-cd /home/kingb/aim-grok && grok
+cd ~/aim-grok && grok
 # or attach tmux session aim-grok
 ```
 

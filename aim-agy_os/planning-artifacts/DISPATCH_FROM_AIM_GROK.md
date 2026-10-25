@@ -5,7 +5,7 @@
 ## Context
 Grok completed a full project health audit of aim-agy. Location:
 
-`/home/kingb/aim-agy/aim-agy_os/planning-artifacts/PROJECT_AUDIT.md`
+`~/aim-agy/aim-agy_os/planning-artifacts/PROJECT_AUDIT.md`
 
 ## Your task (Operator directive)
 1. Read `PROJECT_AUDIT.md` thoroughly.

@@ -15,7 +15,7 @@
 
 ## Validated
 ```
-find_project_root from vessel/engine/.aim_core → /home/kingb/aim-grok
+find_project_root from vessel/engine/.aim_core → ~/aim-grok
 ./aim pulse → exit 0, HANDOFF READY
 ```
 

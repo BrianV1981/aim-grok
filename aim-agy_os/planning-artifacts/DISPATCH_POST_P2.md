@@ -21,7 +21,7 @@ If you want one hardening ticket for later (do **not** implement now unless Oper
 Open as a small issue and **stop** — no implement unless ordered.
 
 ### 4. aim-grok coordination
-Orchestrator will **sync selected engine deltas** into `/home/kingb/aim-grok` (path fix already exists there; heap/docs/CI/traceback/prune may be pulled).  
+Orchestrator will **sync selected engine deltas** into `~/aim-grok` (path fix already exists there; heap/docs/CI/traceback/prune may be pulled).  
 **You do not re-scaffold or rewrite aim-grok.** If asked later to help sync, wait for a specific dispatch.
 
 ### 5. Status back to aim-grok when close-out done

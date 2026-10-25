@@ -3,7 +3,7 @@
 **VERDICT: PASS**
 
 - marker: `OP_TP_grok_20260717_062756`
-- vessel: `/home/kingb/aim-grok`
+- vessel: `~/aim-grok`
 - source: `e2e_tp_src_grok_1784284076` (dead=True)
 - child sessions: ['grok_reincarnate_aim-grok_1784284086']
 - killed_child_after: True
@@ -26,8 +26,8 @@
 ```
 Handoff Generator: Found 1 transcript(s) via vessel_paths
 Handoff Generator: EXCLUSIVE session_id=e2etpgr-cff282ea-4e2e-8e2e-a9f25b8c228d
-Handoff Generator: session_id=e2etpgr-cff282ea-4e2e-8e2e-a9f25b8c228d source=/home/kingb/.grok/sessions/%2Fhome%2Fkingb%2Faim-grok/e2etpgr-cff282ea-4e2e-8e2e-a9f25b8c228d/updates.jsonl conversational_turns=4
-      Historical Archive updated: /home/kingb/aim-grok/aim-agy_os/archive/history/2026-07-17_0627_e2etpgr-cff282ea-4e2e-8e2e-a9f25b8c228d.md
+Handoff Generator: session_id=e2etpgr-cff282ea-4e2e-8e2e-a9f25b8c228d source=~/.grok/sessions/%2Fhome%2Fkingb%2Faim-grok/e2etpgr-cff282ea-4e2e-8e2e-a9f25b8c228d/updates.jsonl conversational_turns=4
+      Historical Archive updated: ~/aim-grok/aim-agy_os/archive/history/2026-07-17_0627_e2etpgr-cff282ea-4e2e-8e2e-a9f25b8c228d.md
       [Monolithic] Triggered wiki daemon (memory-wiki/daemon.log).
 
 [92m--- A.I.M. HANDOFF READY ---[0m

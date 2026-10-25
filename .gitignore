@@ -39,3 +39,5 @@ aim-agy_os/memory-wiki/_raw_logs/
 # Caches / local
 .pytest_cache/
 aim-agy_os/memory-wiki/daemon.log
+.grok/mcp.json
+.vscode/mcp.json

@@ -30,8 +30,8 @@ See `scripts/VESSEL_LOCKSTEP.md` for lockstep policy and OpenCode port rules.
 ## Safe rsync (engine only)
 
 ```bash
-AGY=/home/kingb/aim-agy
-GROK=/home/kingb/aim-grok
+AGY=~/aim-agy
+GROK=~/aim-grok
 
 # Dry-run first
 rsync -anc --delete \

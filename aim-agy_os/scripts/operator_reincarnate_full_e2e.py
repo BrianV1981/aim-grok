@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
-VESSEL = Path(os.environ.get("AIM_VESSEL", "/home/kingb/aim-grok")).resolve()
+VESSEL = Path(os.environ.get("AIM_VESSEL", "~/aim-grok")).resolve()
 AIM = VESSEL / "aim-agy_os"
 VENV_PY = AIM / "venv" / "bin" / "python3"
 SESS_ROOT = Path.home() / ".grok/sessions" / quote(str(VESSEL), safe="")

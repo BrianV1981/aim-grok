@@ -7,11 +7,11 @@
 #   AIM_VESSEL=grok bash scripts/fleet_full_reincarnate_gate.sh
 # Env:
 #   AIM_LIFE_USE_LOCAL=0|1   default 0 = git clone main from GitHub
-#   AIM_LIFE_ROOT            default /home/kingb/test_fleet_full_gate
+#   AIM_LIFE_ROOT            default ~/test_fleet_full_gate
 set -euo pipefail
 
-ORCH="${AIM_ORCH_SRC:-/home/kingb/aim-grok}"
-LIFE_ROOT="${AIM_LIFE_ROOT:-/home/kingb/test_fleet_full_gate}"
+ORCH="${AIM_ORCH_SRC:-~/aim-grok}"
+LIFE_ROOT="${AIM_LIFE_ROOT:-~/test_fleet_full_gate}"
 USE_LOCAL="${AIM_LIFE_USE_LOCAL:-0}"
 STAMP=$(date +%Y%m%d_%H%M%S)
 VESSELS="${AIM_VESSEL:-grok agy opencode}"
@@ -37,15 +37,15 @@ run_vessel() {
   case "$VESSEL" in
     grok)
       GH_URL="https://github.com/BrianV1981/aim-grok.git"
-      ROOT_SRC="${AIM_GROK_SRC:-/home/kingb/aim-grok}"
+      ROOT_SRC="${AIM_GROK_SRC:-~/aim-grok}"
       ;;
     agy)
       GH_URL="https://github.com/BrianV1981/aim-agy.git"
-      ROOT_SRC="${AIM_AGY_SRC:-/home/kingb/aim-agy}"
+      ROOT_SRC="${AIM_AGY_SRC:-~/aim-agy}"
       ;;
     opencode)
       GH_URL="https://github.com/BrianV1981/aim-opencode.git"
-      ROOT_SRC="${AIM_OPENCODE_SRC:-/home/kingb/aim-opencode}"
+      ROOT_SRC="${AIM_OPENCODE_SRC:-~/aim-opencode}"
       ;;
     *) echo "unknown vessel $VESSEL"; return 2 ;;
   esac

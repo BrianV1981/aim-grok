@@ -18,8 +18,8 @@ session=019fe2e1-full-4e2e-8e2e-8ca4ae854769
 success_n=1 config_n=1
 
 pages:
-/home/kingb/aim-grok/aim-agy_os/memory-wiki/pages/reincarnate-019fe2e1-full-4e2e-8e2e-8ca4ae854769.md
-/home/kingb/aim-grok/aim-agy_os/memory-wiki/pages/source-019fe2e1-full-4e2e-8e2e-8ca4ae854769.md
+~/aim-grok/aim-agy_os/memory-wiki/pages/reincarnate-019fe2e1-full-4e2e-8e2e-8ca4ae854769.md
+~/aim-grok/aim-agy_os/memory-wiki/pages/source-019fe2e1-full-4e2e-8e2e-8ca4ae854769.md
 
 stdout:
 as recently updated REINCARNATION_GAMEPLAN.md...
@@ -45,7 +45,7 @@ Then load it:
   aim jack-in community-issues.engram
 
       Syncing remote issues and harvesting closed bugs...
-      Wake prompt saved: /home/kingb/aim-grok/aim-agy_os/.aim_core/temp/LAST_WAKE_PROMPT.md
+      Wake prompt saved: ~/aim-grok/aim-agy_os/.aim_core/temp/LAST_WAKE_PROMPT.md
 [2/4] --no-teleport: skipping tmux spawn
 [3/4] --no-teleport: skipping teleport switch
 
@@ -56,12 +56,12 @@ Then load it:
 
 daemon:
 
---- handoff spawn 2026-07-17T04:25:37.833610 archive=/home/kingb/aim-grok/aim-agy_os/archive/history/2026-07-17_0425_019fe2e1-full-4e2e-8e2e-8ca4ae854769.md ---
-[OK] session_summarizer loaded CONFIG from /home/kingb/aim-grok/aim-agy_os/.aim_core/CONFIG.json
+--- handoff spawn 2026-07-17T04:25:37.833610 archive=~/aim-grok/aim-agy_os/archive/history/2026-07-17_0425_019fe2e1-full-4e2e-8e2e-8ca4ae854769.md ---
+[OK] session_summarizer loaded CONFIG from ~/aim-grok/aim-agy_os/.aim_core/CONFIG.json
 [WATCHDOG] Beginning wiki sequence for: 2026-07-17_0425_019fe2e1-full-4e2e-8e2e-8ca4ae854769.md
 [SUCCESS] Deterministic wiki reincarnation sequence complete.
-[WATCHDOG] Staged raw log: /home/kingb/aim-grok/aim-agy_os/memory-wiki/_raw_logs/019fe2e1-full-4e2e-8e2e-8ca4ae854769_reincarnate_raw.md
-[WATCHDOG] Wrote ingest /home/kingb/aim-grok/aim-agy_os/memory-wiki/_ingest/reincarnate_019fe2e1-full-4e2e-8e2e-8ca4ae854769.md
+[WATCHDOG] Staged raw log: ~/aim-grok/aim-agy_os/memory-wiki/_raw_logs/019fe2e1-full-4e2e-8e2e-8ca4ae854769_reincarnate_raw.md
+[WATCHDOG] Wrote ingest ~/aim-grok/aim-agy_os/memory-wiki/_ingest/reincarnate_019fe2e1-full-4e2e-8e2e-8ca4ae854769.md
   [wiki] raw→ingest rawsum_019fe2e1-full-4e2e-8e2e-8ca4ae854769-reincarnate.md
   [stage0] created source-019fe2e1-full-4e2e-8e2e-8ca4ae854769.md
   [stage0] log ingest | 019fe2e1-full-4e2e-8e2e-8ca4ae854769

@@ -11,7 +11,7 @@ description: >
 ## CLI path
 
 ```bash
-AIM_OS="/home/kingb/aim-grok/aim-agy_os"
+AIM_OS="~/aim-grok/aim-agy_os"
 PY="$AIM_OS/venv/bin/python3"
 EXCHANGE="$AIM_OS/.aim_core/plugins/datajack/aim_exchange.py"
 ```

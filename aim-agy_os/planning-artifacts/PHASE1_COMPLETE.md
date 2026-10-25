@@ -1,7 +1,7 @@
 # Phase 1 complete — Grok tool surface & sessions
 
 **Date:** 2026-07-11  
-**Vessel:** `/home/kingb/aim-grok`
+**Vessel:** `~/aim-grok`
 
 ## Delivered
 

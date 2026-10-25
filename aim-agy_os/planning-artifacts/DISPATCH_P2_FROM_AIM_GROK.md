@@ -1,6 +1,6 @@
 # Work order from aim-grok (Orchestrator) — Operator authorized
 
-**You are on aim-agy.** Do **not** re-scaffold aim-grok. Phase 0+1 already exist at `/home/kingb/aim-grok`.
+**You are on aim-agy.** Do **not** re-scaffold aim-grok. Phase 0+1 already exist at `~/aim-grok`.
 
 ## Status
 - P0/P1 merged to main. Issues #66–#72 closed.

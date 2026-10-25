@@ -17,7 +17,7 @@
 | aim-grok SOURCE pin (stale until sync) | | Commit | `947c538` (post P2 stack: #86–#89) | |
 | Canonical session naming on soul | `aim-agy_os/.aim_core/session_naming.py` (default vessel `agy`) |
 | Grok parallel dialect | `agent_session_names.py` — will reconcile on agy→grok sync (orchestrator) |
-| Diff scoreboard | `python3 /home/kingb/aim-grok/scripts/vessel_core_diff.py --report-only` |
+| Diff scoreboard | `python3 ~/aim-grok/scripts/vessel_core_diff.py --report-only` |
 
 ## Your mission (aim-agy = soul)
 
@@ -35,13 +35,13 @@ You already merged #92–#95. Now **support fleet lockstep** — do **not** re-i
 
 - Every short paste: `[FROM:agy_reincarnation_1783842559] [REPLY_TO:aim-grok] …`
 - Use helper:  
-  `bash /home/kingb/aim-agy/.gemini/skills/aim-communicate/scripts/tmux_send.sh --target aim-grok --from agy_reincarnation_1783842559 --reply-to aim-grok --message '…'`
+  `bash ~/aim-agy/.gemini/skills/aim-communicate/scripts/tmux_send.sh --target aim-grok --from agy_reincarnation_1783842559 --reply-to aim-grok --message '…'`
 - AGY submit = Escape then Enter (script handles it).
 - Structured reply only — no open chat loop.
 
 ## Reply file
 
-Write: `/home/kingb/aim-agy/aim-agy_os/planning-artifacts/REPLY_LOCKSTEP_AGY.md`
+Write: `~/aim-agy/aim-agy_os/planning-artifacts/REPLY_LOCKSTEP_AGY.md`
 
 Structure:
 1. AGREED
